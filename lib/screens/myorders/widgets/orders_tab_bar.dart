@@ -62,9 +62,9 @@ class _OrderTapBarState extends State<OrderTapBar>
           size: order['size'],
           quantity: order['quantity'],
           price: order['price'],
-          onTrackOrder: () {
-            // Handle track order
-          },
+          // onTrackOrder: () {
+          //   // Handle track order
+          // },
         );
       },
     );

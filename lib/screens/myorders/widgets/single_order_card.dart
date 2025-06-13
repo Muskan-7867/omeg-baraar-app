@@ -7,7 +7,6 @@ class OrderProductCard extends StatelessWidget {
   final String size;
   final int quantity;
   final double price;
-  final VoidCallback onTrackOrder;
 
   const OrderProductCard({
     super.key,
@@ -16,7 +15,6 @@ class OrderProductCard extends StatelessWidget {
     required this.size,
     required this.quantity,
     required this.price,
-    required this.onTrackOrder,
   });
 
   @override
@@ -68,7 +66,9 @@ class OrderProductCard extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: onTrackOrder,
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/ordertrack');
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColour.primaryColor,
                 shape: RoundedRectangleBorder(
