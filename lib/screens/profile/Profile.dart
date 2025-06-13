@@ -18,10 +18,22 @@ class ProfileScreen extends StatelessWidget {
           Navigator.pushReplacementNamed(context, "/orders");
         },
       },
-      {'icon': Icons.payment, 'title': "Payment Methods", 'onTap': () {}},
+      {
+        'icon': Icons.payment,
+        'title': "Payment Methods",
+        'onTap': () {
+          Navigator.pushReplacementNamed(context, "/paymentmethod");
+        },
+      },
       {'icon': Icons.help_center, 'title': "Help Center", 'onTap': () {}},
       {'icon': Icons.privacy_tip, 'title': "Privacy Policy", 'onTap': () {}},
-      {'icon': Icons.settings, 'title': "Settings", 'onTap': () {}},
+      {
+        'icon': Icons.settings,
+        'title': "Settings",
+        'onTap': () {
+          Navigator.pushReplacementNamed(context, "/settings");
+        },
+      },
       {
         'icon': Icons.insert_invitation_rounded,
         'title': "Invite Friends",
