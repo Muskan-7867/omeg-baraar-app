@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/myorders/order.dart';
+import 'package:omeg_bazaar/screens/profile/myorders/order.dart';
+import 'package:omeg_bazaar/screens/trackorder/widgets/order_timeline.dart';
 import 'package:omeg_bazaar/screens/trackorder/widgets/tarck_order_card.dart';
 
 class OrderTrack extends StatefulWidget {
   const OrderTrack({super.key});
-
   @override
   State<OrderTrack> createState() => _OrderTrackState();
 }
@@ -37,13 +37,51 @@ class _OrderTrackState extends State<OrderTrack> {
             quantity: 1,
             price: 1000,
           ),
-
           const Divider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: const Text(
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(
               'Order Details',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text('Expected Delivery Date:'),
+                    Text('20 JUNE, 2025'),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [Text('Tracking Id:'), Text('tk345261')],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [Text('Order Status:'), Text('Shipped')],
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(
+              'Order Status',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 500,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: OrderTimeLine(),
             ),
           ),
         ],

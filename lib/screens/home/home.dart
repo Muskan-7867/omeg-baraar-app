@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/home/widgets/home_body.dart';
 import 'package:omeg_bazaar/screens/product/products_page.dart';
-import 'package:omeg_bazaar/screens/profile/Profile.dart';
+import 'package:omeg_bazaar/screens/profile/profile.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/app_bar.dart';
 
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      appBar: OmAppBar(title: 'Omeg-Bazaar', cartItemCount: 1),
+      appBar: OmAppBar(title: 'Omeg-Bazaar'),
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

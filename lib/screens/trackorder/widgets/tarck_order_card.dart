@@ -57,7 +57,7 @@ class TrackOrderProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '\Rs ${price.toStringAsFixed(2)} /-',
+                    'Rs ${price.toStringAsFixed(2)} /-',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

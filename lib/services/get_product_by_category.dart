@@ -14,7 +14,6 @@ class GetProdByCategory {
       final categoryProducts = data['products'];
 
       if (categoryProducts is List) {
-        print(categoryProducts);
         return categoryProducts;
       } else {
         throw Exception("Failed to load categoryProducts");

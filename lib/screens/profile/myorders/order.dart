@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/widgets/orders_tab_bar.dart';
-import 'package:omeg_bazaar/screens/profile/Profile.dart';
+import 'package:omeg_bazaar/screens/profile/profile.dart';
 
 class MyOrders extends StatefulWidget {
   const MyOrders({super.key});

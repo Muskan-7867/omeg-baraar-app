@@ -16,7 +16,7 @@ class GetCategoryApiCall {
       final categories = data['categories'];
 
       if (categories is List) {
-        print(categories);
+       
         return categories;
       } else {
         throw Exception("Unexpected format: 'categories' is not a List");
