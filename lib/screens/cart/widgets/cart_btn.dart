@@ -23,7 +23,7 @@ class CartButton extends StatelessWidget {
           child: InkWell(
             onTap: onDecrement,
             borderRadius: BorderRadius.circular(5),
-            splashColor: Colors.red.withOpacity(0.2),
+            splashColor: Colors.red.withValues(alpha: 0.2),
             child: Container(
               height: 24,
               width: 24,
@@ -46,7 +46,7 @@ class CartButton extends StatelessWidget {
           child: InkWell(
             onTap: onIncrement,
             borderRadius: BorderRadius.circular(5),
-            splashColor: Colors.red.withOpacity(0.2),
+            splashColor: Colors.red.withValues(alpha: 0.2),
             child: Container(
               height: 24,
               width: 24,

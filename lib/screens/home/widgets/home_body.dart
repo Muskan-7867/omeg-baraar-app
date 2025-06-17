@@ -87,34 +87,67 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CustomSearchBar(),
-            const SizedBox(height: 15),
-            const MyBanner(),
-            const SizedBox(height: 10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      //customscrollview allows you to use slivers, which are scrollable areas with advanced control (like pinning, floating, etc.).
+      child: CustomScrollView(
+        slivers: [
+          // /SliverPersistentHeader This is a special type of sliver that lets you "pin" a widget to the top when scrolling.
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SearchBarDelegate(),
+          ), //Supplies the widget (your CustomSearchBar) and layout behavior (height, rebuild conditions).
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 15),
+                const MyBanner(),
+                const SizedBox(height: 10),
 
-            CategoriesOnHomePage(
-              categories: categories,
-              isCategoryLoading: isCategoryLoading,
-              selectedCategory: selectedCategory,
-              onCategoryTap: fetchProductsByCategory,
-            ),
+                CategoriesOnHomePage(
+                  categories: categories,
+                  isCategoryLoading: isCategoryLoading,
+                  selectedCategory: selectedCategory,
+                  onCategoryTap: fetchProductsByCategory,
+                ),
 
-            const SizedBox(height: 20),
-            ProductsOnHomePage(
-              displayedProducts: displayedProducts,
-              isLoading: isProductsLoading,
-              selectedCategory: selectedCategory,
-              onSeeAllPressed: widget.onSeeAllPressed,
+                const SizedBox(height: 20),
+                ProductsOnHomePage(
+                  displayedProducts: displayedProducts,
+                  isLoading: isProductsLoading,
+                  selectedCategory: selectedCategory,
+                  onSeeAllPressed: widget.onSeeAllPressed,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
+  @override
+  double get minExtent => 70;
+  @override
+  double get maxExtent => 80;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.centerLeft,
+      child: const CustomSearchBar(),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SearchBarDelegate oldDelegate) => false;
 }

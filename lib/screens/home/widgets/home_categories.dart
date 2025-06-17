@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/widgets/common/category/category_btn.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/CategoryShimmerLoader.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/category_shimmer_loader.dart';
 
 class CategoriesOnHomePage extends StatelessWidget {
   final List categories;

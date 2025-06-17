@@ -1,5 +1,3 @@
-
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartHelper {
@@ -27,5 +25,10 @@ class CartHelper {
     final ids = prefs.getStringList('cartProdIds') ?? [];
     ids.remove(id);
     await prefs.setStringList('cartProdIds', ids);
+  }
+
+  static Future<List<String>> getCartItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('cart') ?? [];
   }
 }

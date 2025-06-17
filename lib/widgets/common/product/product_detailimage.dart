@@ -12,7 +12,7 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final bool MultipleImages = widget.images.length > 1;
+    final bool multipleimages = widget.images.length > 1;
     return Container(
       decoration: BoxDecoration(
         // color: Colors.red[100],
@@ -25,7 +25,7 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
       // width: double.infinity,
       child: Stack(
         children: [
-          if (MultipleImages)
+          if (multipleimages)
             Positioned(
               bottom: 25,
               left: 0,
@@ -34,7 +34,7 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.6), // 80% opacity
+                    color: Colors.white.withValues(alpha: 0.6), // 80% opacity
 
                     borderRadius: BorderRadius.circular(10),
                   ),

@@ -21,7 +21,6 @@ class CartSummary extends StatelessWidget {
     for (int i = 0; i < cartProducts.length; i++) {
       final product = cartProducts[i];
       final qty = quantities[i];
-
       final int price = product['price'] ?? 0;
       final int delivery = product['deliveryCharges'] ?? 0;
 

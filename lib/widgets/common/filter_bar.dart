@@ -3,7 +3,7 @@ import 'package:omeg_bazaar/screens/product/widget/price_slider.dart';
 import 'package:omeg_bazaar/services/get_category_api.dart';
 import 'package:omeg_bazaar/widgets/common/category/category_btn.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/CategoryShimmerLoader.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/category_shimmer_loader.dart';
 
 class FilterBar extends StatefulWidget {
   const FilterBar({super.key});
@@ -95,9 +95,7 @@ class _FilterBarState extends State<FilterBar> {
                   ),
                 ),
               ),
-
           const SizedBox(height: 20),
-
           const Divider(),
           Column(
             children: [
@@ -110,9 +108,7 @@ class _FilterBarState extends State<FilterBar> {
               PriceSlider(),
             ],
           ),
-
-          // Add more filters here as needed
-        ],
+          ],
       ),
     );
   }

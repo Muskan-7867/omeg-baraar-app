@@ -15,11 +15,11 @@ class BottomSheetCart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      height: 380,
+      height: 340,
       width: double.infinity,
 
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Column(
           children: [
             const Text(

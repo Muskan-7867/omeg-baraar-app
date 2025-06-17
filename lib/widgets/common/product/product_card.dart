@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/services/cart_helper.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_info_and_cartbtn.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -30,15 +31,19 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   Future<void> toggleCart() async {
+    final cart = Provider.of<CartProvider>(context, listen: false);
     final prodId = widget.product['_id'].toString();
 
     if (inCart) {
       await CartHelper.removeFromCart(prodId);
+      cart.decrement();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Removed from cart')));
     } else {
       await CartHelper.addToCart(prodId);
+
+      cart.increment();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Added to cart')));

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/services/get_category_api.dart';
 import 'package:omeg_bazaar/services/get_product_by_category.dart';
 import 'package:omeg_bazaar/widgets/common/category/category_btn.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/CategoryShimmerLoader.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/category_shimmer_loader.dart';
 import 'package:omeg_bazaar/screens/home/widgets/products.dart';
 
 class CategoryProduct extends StatefulWidget {
@@ -42,7 +42,7 @@ class _CategoryProductState extends State<CategoryProduct>
         }
       });
     } catch (e) {
-      print('Category fetch error: $e');
+      // print('Category fetch error: $e');
       setState(() {
         isLoading = false;
       });
@@ -62,7 +62,7 @@ class _CategoryProductState extends State<CategoryProduct>
         selectedProducts = data;
       });
     } catch (e) {
-      print('Product fetch error: $e');
+      // print('Product fetch error: $e');
     } finally {
       setState(() {
         isProductsLoading = false;
