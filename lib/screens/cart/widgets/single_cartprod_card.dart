@@ -6,7 +6,6 @@ class SingleCartProdCard extends StatelessWidget {
   final Map<String, dynamic> product;
   final String? imageUrl;
   final int quantity;
-
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
@@ -30,65 +29,69 @@ class SingleCartProdCard extends StatelessWidget {
           ),
           builder: (BuildContext context) {
             return BottomSheetCart(
-              cartProducts: [product], // ✅ Wrap in list
-              quantities: [quantity], // ✅ Wrap in list
+              cartProducts: [product],
+              quantities: [quantity],
             );
           },
         );
       },
-      child: Container(
-        margin: const EdgeInsets.all(6),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      imageUrl ??
-                          "https://via.placeholder.com/90x90.png?text=No+Image",
+
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Container(
+          margin: const EdgeInsets.all(6),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        imageUrl ??
+                            "https://via.placeholder.com/90x90.png?text=No+Image",
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product['name'] ?? "Product Name",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product['name'] ?? "Product Name",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Text(
-                      "₹${product['price'] ?? '0'} /-",
-                      style: const TextStyle(fontSize: 14),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Text(
+                        "₹${product['price'] ?? '0'} /-",
+                        style: const TextStyle(fontSize: 12),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            CartButton(
-              quantity: quantity,
-              onIncrement: onIncrement,
-              onDecrement: onDecrement,
-            ),
-          ],
+              CartButton(
+                quantity: quantity,
+                onIncrement: onIncrement,
+                onDecrement: onDecrement,
+              ),
+            ],
+          ),
         ),
       ),
     );
