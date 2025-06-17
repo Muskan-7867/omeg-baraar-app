@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/utills/app_router.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -12,7 +14,12 @@ void main() {
     );
   };
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => CartProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

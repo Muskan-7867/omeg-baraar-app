@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/ProductCardShimmer.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
 
 class ProductList extends StatelessWidget {

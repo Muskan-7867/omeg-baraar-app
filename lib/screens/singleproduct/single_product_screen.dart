@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/services/cart_helper.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_detailimage.dart';
 import 'package:omeg_bazaar/screens/product/widget/product_info_screen.dart';
+import 'package:provider/provider.dart';
 
 class SingleProduct extends StatefulWidget {
   const SingleProduct({super.key});
@@ -41,14 +43,18 @@ class _SingleProductState extends State<SingleProduct> {
   }
 
   Future<void> toggleCart() async {
+    final cart = Provider.of<CartProvider>(context, listen: false);
     final prodId = product!['_id'].toString();
 
     if (isInCart) {
       await CartHelper.removeFromCart(prodId);
+
+      cart.decrement();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Removed from Cart')));
     } else {
+      cart.increment();
       await CartHelper.addToCart(prodId);
       ScaffoldMessenger.of(
         context,

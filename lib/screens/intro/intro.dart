@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/intro/widgets/headingSection.dart';
-import 'package:omeg_bazaar/screens/intro/widgets/imageSection.dart';
+import 'package:omeg_bazaar/screens/intro/widgets/heading_section.dart';
+import 'package:omeg_bazaar/screens/intro/widgets/image_section.dart';
 import 'package:omeg_bazaar/utills/app_router.dart';
-import 'package:omeg_bazaar/widgets/common/rounded_Button.dart';
+import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
 
 class Intro extends StatefulWidget {
   const Intro({super.key});
