@@ -3,6 +3,7 @@ import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/utills/app_router.dart';
 import 'package:provider/provider.dart';
 
+
 void main() {
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Center(
