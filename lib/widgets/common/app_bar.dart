@@ -24,13 +24,16 @@ class OmAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Stack(
                 children: [
                   IconButton(
-                    onPressed:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CartPage(),
-                          ),
+                    onPressed: () {
+                      // Refresh cart count before navigating
+                      cart.loadCartCount();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CartPage(),
                         ),
+                      );
+                    },
                     icon: const Icon(
                       Icons.shopping_cart,
                       size: 28,
