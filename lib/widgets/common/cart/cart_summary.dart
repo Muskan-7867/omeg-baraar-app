@@ -17,6 +17,7 @@ class CartSummary extends StatelessWidget {
     int totalPrice = 0;
     int deliveryCharges = 0;
     int totalQuantity = 0;
+    int itemCount = cartProducts.length;
 
     for (int i = 0; i < cartProducts.length; i++) {
       final product = cartProducts[i];
@@ -26,10 +27,13 @@ class CartSummary extends StatelessWidget {
 
       totalPrice += price * qty;
       deliveryCharges += delivery;
-      totalQuantity += qty;
+      totalQuantity += qty; // This should correctly sum all quantities
     }
 
-    final int grandTotal = totalPrice + deliveryCharges;
+    int averageDeliveryCharges =
+        itemCount > 0 ? (deliveryCharges / itemCount).round() : 0;
+
+    final int grandTotal = totalPrice + averageDeliveryCharges;
 
     return Container(
       color: Colors.white,
@@ -39,7 +43,7 @@ class CartSummary extends StatelessWidget {
         children: [
           _summaryRow("Total Items", "$totalQuantity"),
           _summaryRow("Items Total", "₹$totalPrice"),
-          _summaryRow("Delivery Charges", "₹$deliveryCharges"),
+          _summaryRow("Delivery Charges (Avg)", "₹$averageDeliveryCharges"),
           const Divider(),
           _summaryRow("Grand Total", "₹$grandTotal", isBold: true),
           const SizedBox(height: 10),
