@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/screens/checkout/order_summary.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -37,18 +38,31 @@ class _OrderListState extends State<OrderList> {
 
   void openCheckout() {
     double total = 0;
+    double deliveryCharges = 0;
+
     for (int i = 0; i < widget.cartProducts.length; i++) {
-      total += widget.cartProducts[i]['price'] * widget.quantities[i];
+      final product = widget.cartProducts[i];
+      final qty = widget.quantities[i];
+      final double price = product['price']?.toDouble() ?? 0;
+      final double delivery = product['deliveryCharges']?.toDouble() ?? 0;
+      total += price * qty;
+      deliveryCharges += delivery;
     }
 
-    if (total <= 0) {
+    double averageDeliveryCharges =
+        widget.cartProducts.isNotEmpty
+            ? deliveryCharges / widget.cartProducts.length
+            : 0;
+
+    double grandTotal = total + averageDeliveryCharges;
+    if (grandTotal <= 0) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Invalid order amount')));
       return;
     }
 
-    int amount = (total * 100).toInt();
+    int amount = (grandTotal * 100).toInt();
     debugPrint('Payment Amount: $amount paise');
 
     var options = {
@@ -146,8 +160,13 @@ class _OrderListState extends State<OrderList> {
               },
             ),
           ),
+          OrderSummary(
+            cartProducts: widget.cartProducts,
+            quantities: widget.quantities,
+          ),
+
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
