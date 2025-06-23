@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/product/widget/products_list.dart';
-import 'package:omeg_bazaar/services/get_products_api.dart';
-import 'package:omeg_bazaar/widgets/common/filter_bar.dart';
+import 'package:omeg_bazaar/services/get_product_by_query.dart';
+import 'package:omeg_bazaar/screens/product/widget/filter_bar.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -9,34 +10,68 @@ class ProductsPage extends StatefulWidget {
   @override
   State<ProductsPage> createState() => _ProductsPageState();
 }
-
 class _ProductsPageState extends State<ProductsPage> {
-  final GetProductsApiCall _api = GetProductsApiCall();
+  final GetFilteredProducts _productService = GetFilteredProducts();
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
 
   List<Map<String, dynamic>> _products = [];
   bool _isLoading = true;
   String _errorMessage = '';
+  String? _selectedCategory;
+  double _minPrice = 0;
+  double _maxPrice = 1000000000000;
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _fetchProducts();
+    _fetchRelatedProducts();
+    _searchController.addListener(_onSearchChanged);
   }
 
-  Future<void> _fetchProducts() async {
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        _searchQuery = _searchController.text.trim();
+        _fetchRelatedProducts();
+      });
+    });
+  }
+
+  Future<void> _fetchRelatedProducts() async {
+    setState(() => _isLoading = true);
     try {
-      final products = await _api.getProducts();
-      setState(() {
-        _products = products;
-        _isLoading = false;
-      });
+      final products = await _productService.fetchFilteredProducts(
+        category: _selectedCategory,
+        search: _searchQuery,
+        minPrice: _minPrice,
+        maxPrice: _maxPrice,
+      );
+      setState(() => _products = products);
     } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-        _isLoading = false;
-      });
+      setState(() => _errorMessage = e.toString());
+    } finally {
+      setState(() => _isLoading = false);
     }
+  }
+
+  void _applyFilters(Map<String, dynamic> filters) {
+    setState(() {
+      _selectedCategory = filters['category'];
+      _minPrice = filters['minPrice'] ?? 0;
+      _maxPrice = filters['maxPrice'] ?? 1000000000000;
+      _fetchRelatedProducts();
+    });
   }
 
   @override
@@ -44,7 +79,7 @@ class _ProductsPageState extends State<ProductsPage> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      drawer: const FilterBar(),
+      drawer: FilterBar(onApplyFilters: _applyFilters),
       body: SafeArea(
         child: Builder(
           builder:
@@ -59,7 +94,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           child: TextField(
                             controller: _searchController,
                             onChanged: (value) {
-                              // You can filter products here
+                             
                             },
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.search),

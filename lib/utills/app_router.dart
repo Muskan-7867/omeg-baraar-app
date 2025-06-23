@@ -7,7 +7,6 @@ import 'package:omeg_bazaar/screens/intro/intro.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/order.dart';
 import 'package:omeg_bazaar/screens/profile/payment-methods/payment_method.dart';
 import 'package:omeg_bazaar/screens/product/products_page.dart';
-import 'package:omeg_bazaar/screens/product/widget/price_slider.dart';
 import 'package:omeg_bazaar/screens/profile/profile.dart';
 import 'package:omeg_bazaar/screens/profile/settings/settings.dart';
 import 'package:omeg_bazaar/screens/singleproduct/single_product_screen.dart';
@@ -22,7 +21,6 @@ class AppRouter {
   static const String login = '/login';
   static const String signup = '/signup';
   static const String verify = '/verify';
-  static const String priceSlider = '/priceslider';
   static const String productspage = '/productspage';
   static const String checkout = '/checkout';
   static const String orders = '/orders';
@@ -40,7 +38,6 @@ class AppRouter {
     signup: (context) => UserSignUp(),
     verify: (context) => VerifyUser(),
     productspage: (context) => ProductsPage(),
-    priceSlider: (context) => PriceSlider(),
     orders: (context) => MyOrders(),
     profile: (context) => ProfileScreen(),
     settings: (context) => Settings(),

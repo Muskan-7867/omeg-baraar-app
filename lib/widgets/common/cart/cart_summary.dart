@@ -27,7 +27,7 @@ class CartSummary extends StatelessWidget {
 
       totalPrice += price * qty;
       deliveryCharges += delivery;
-      totalQuantity += qty; // This should correctly sum all quantities
+      totalQuantity += qty; 
     }
 
     int averageDeliveryCharges =
