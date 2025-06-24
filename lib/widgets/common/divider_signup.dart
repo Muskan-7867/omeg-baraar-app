@@ -29,7 +29,6 @@ class DividerAndSignUp extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.brown,
                   fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
                 ),
               ),
             ),

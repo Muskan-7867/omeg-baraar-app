@@ -3,7 +3,7 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class GradientButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Gradient? gradient;
   final double borderRadius;
   final TextStyle? textStyle;

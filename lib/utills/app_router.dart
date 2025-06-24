@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:omeg_bazaar/screens/auth/sign_in.dart';
-import 'package:omeg_bazaar/screens/auth/signup.dart';
+import 'package:omeg_bazaar/screens/auth/sign_up.dart';
 import 'package:omeg_bazaar/screens/auth/verify.dart';
 import 'package:omeg_bazaar/screens/home/home.dart';
 import 'package:omeg_bazaar/screens/intro/intro.dart';
