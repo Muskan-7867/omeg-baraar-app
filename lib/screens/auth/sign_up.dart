@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/auth/signin_form.dart';
-import 'package:omeg_bazaar/services/user_signin.dart';
+import 'package:omeg_bazaar/screens/auth/signup_form.dart';
+import 'package:omeg_bazaar/services/user_signup.dart';
 import 'package:omeg_bazaar/widgets/common/divider_signup.dart';
 import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
 
-class UserLogin extends StatefulWidget {
-  const UserLogin({super.key});
+class UserSignUp extends StatefulWidget {
+  const UserSignUp({super.key});
 
   @override
-  State<UserLogin> createState() => _UserLoginState();
+  State<UserSignUp> createState() => _UserSignUpState();
 }
 
-class _UserLoginState extends State<UserLogin> {
+class _UserSignUpState extends State<UserSignUp> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _loginUser() async {
+  Future<void> _registerUser() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -32,7 +34,8 @@ class _UserLoginState extends State<UserLogin> {
     });
 
     try {
-      final result = await UserAuth().loginUser(
+      final result = await UserRegister().registerUser(
+        _usernameController.text.trim(),
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
@@ -40,24 +43,26 @@ class _UserLoginState extends State<UserLogin> {
       if (!mounted) return;
 
       if (result['success'] == true) {
+        // Clear fields
+        _usernameController.clear();
         _emailController.clear();
         _passwordController.clear();
         _formKey.currentState?.reset();
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result['message'] ?? 'Login successful')),
+          SnackBar(
+            content: Text(result['message'] ?? 'Registration successful'),
+          ),
         );
 
+      
         await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) {
-          Navigator.pushReplacementNamed(
-            context,
-            '/home',
-          ); 
+          Navigator.pushReplacementNamed(context, '/login');
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result['message'] ?? 'Login failed')),
+          SnackBar(content: Text(result['message'] ?? 'Registration failed')),
         );
       }
     } catch (e) {
@@ -80,38 +85,43 @@ class _UserLoginState extends State<UserLogin> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/home');
+                    },
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Form(
-                  key: _formKey,
+
+                // Everything else with horizontal padding
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SignInForm(
+                      SignUpForm(
+                        usernameController: _usernameController,
                         emailController: _emailController,
                         passwordController: _passwordController,
                       ),
+                      const SizedBox(height: 30),
                       GradientButton(
-                        text: _isLoading ? "Signing In..." : "Sign In",
-                        onPressed: _isLoading ? null : _loginUser,
+                        text: _isLoading ? "Signing Up..." : "Sign Up",
+                        onPressed: _isLoading ? null : () => _registerUser(),
                       ),
                       const SizedBox(height: 30),
-                      const DividerAndSignUp(isLoginPage: true),
+                      const DividerAndSignUp(isLoginPage: false),
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
