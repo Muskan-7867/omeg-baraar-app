@@ -23,42 +23,62 @@ class OmAppBar extends StatelessWidget implements PreferredSizeWidget {
               padding: const EdgeInsets.only(right: 12),
               child: Stack(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      // Refresh cart count before navigating
-                      cart.loadCartCount();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CartPage(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.shopping_cart,
-                      size: 28,
-                      color: Colors.white,
-                    ),
-                  ),
-                  if (cart.count > 0)
-                    Positioned(
-                      right: 4,
-                      top: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          '${cart.count}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
+                  Row(
+                    children: [
+                      Stack(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                             cart.loadCartCount();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CartPage(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.shopping_cart,
+                              size: 28,
+                              color: Colors.white,
+                            ),
                           ),
+                          if (cart.count > 0)
+                            Positioned(
+                              right: 4,
+                              top: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  '${cart.count}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      IconButton(
+                        onPressed: () {
+                          // Add your login navigation logic here
+                          Navigator.pushNamed(context, '/login');
+                        },
+                        icon: Image.asset(
+                          "assets/icons/login.png",
+                          color: Colors.white,
+                          width: 35,
+                          height: 35,
                         ),
                       ),
-                    ),
+                    ],
+                  ),
                 ],
               ),
             ),
