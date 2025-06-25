@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/auth/signin_form.dart';
 import 'package:omeg_bazaar/services/user_signin.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/divider_signup.dart';
 import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
 
@@ -50,10 +51,7 @@ class _UserLoginState extends State<UserLogin> {
 
         await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) {
-          Navigator.pushReplacementNamed(
-            context,
-            '/home',
-          ); 
+          Navigator.pushReplacementNamed(context, '/home');
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -101,6 +99,24 @@ class _UserLoginState extends State<UserLogin> {
                         emailController: _emailController,
                         passwordController: _passwordController,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/forgetpassword');
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: const Text(
+                                'Forgot Password?',
+                                style: TextStyle(color: AppColour.primaryColor),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
                       GradientButton(
                         text: _isLoading ? "Signing In..." : "Sign In",
                         onPressed: _isLoading ? null : _loginUser,

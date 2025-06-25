@@ -52,14 +52,13 @@ class _UserSignUpState extends State<UserSignUp> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result['message'] ?? 'Registration successful'),
+            duration: const Duration(seconds: 1),
           ),
         );
 
-      
-        await Future.delayed(const Duration(milliseconds: 300));
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, '/login');
-        }
+        await Future.delayed(const Duration(milliseconds: 1500));
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, '/login');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result['message'] ?? 'Registration failed')),
@@ -85,23 +84,24 @@ class _UserSignUpState extends State<UserSignUp> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  },
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
                 ),
+              ),
 
-                // Everything else with horizontal padding
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+              // Everything else with horizontal padding
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Form(
+                  key: _formKey,
+
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -120,8 +120,8 @@ class _UserSignUpState extends State<UserSignUp> {
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

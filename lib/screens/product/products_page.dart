@@ -10,6 +10,7 @@ class ProductsPage extends StatefulWidget {
   @override
   State<ProductsPage> createState() => _ProductsPageState();
 }
+
 class _ProductsPageState extends State<ProductsPage> {
   final GetFilteredProducts _productService = GetFilteredProducts();
   final TextEditingController _searchController = TextEditingController();
@@ -86,16 +87,14 @@ class _ProductsPageState extends State<ProductsPage> {
               (context) => Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         SizedBox(
                           width: screenWidth * 0.8,
                           child: TextField(
                             controller: _searchController,
-                            onChanged: (value) {
-                             
-                            },
+                            onChanged: (value) {},
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.search),
                               contentPadding: const EdgeInsets.symmetric(
@@ -128,7 +127,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             },
                             icon: const Icon(
                               Icons.filter_list,
-                              size: 36,
+                              size: 32,
                               color: Colors.black,
                             ),
                           ),
