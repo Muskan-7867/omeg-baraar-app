@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:omeg_bazaar/screens/auth/forget_password.dart';
 import 'package:omeg_bazaar/screens/auth/sign_in.dart';
 import 'package:omeg_bazaar/screens/auth/sign_up.dart';
 import 'package:omeg_bazaar/screens/auth/verify.dart';
@@ -26,22 +27,31 @@ class AppRouter {
   static const String orders = '/orders';
   static const String profile = '/profile';
   static const String settings = '/settings';
-  static const String  ordertrack = '/ordertrack';
+  static const String ordertrack = '/ordertrack';
+  static const String forgetpassword = '/forgetpassword';
   static const String paymentmethod = '/paymentmethod';
 
   static Map<String, Widget Function(BuildContext)> getRoutes() => {
-    splash: (context) => SplashScreen(),
-    intro: (context) => Intro(),
-    home: (context) => Home(),
-    singleproduct: (context) => SingleProduct(),
-    login: (context) => UserLogin(),
-    signup: (context) => UserSignUp(),
-    verify: (context) => VerifyUser(),
-    productspage: (context) => ProductsPage(),
-    orders: (context) => MyOrders(),
-    profile: (context) => ProfileScreen(),
-    settings: (context) => Settings(),
-    ordertrack: (context) => OrderTrack(),
-    paymentmethod: (context) => PaymentMethod(),
+    splash: (context) => const SplashScreen(),
+    intro: (context) => const Intro(),
+    home: (context) => const Home(),
+    singleproduct: (context) {
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      return SingleProduct(
+        cartProducts: args?['cartProducts'] ?? [],
+        quantities: args?['quantities'] ?? [],
+      );
+    },
+    login: (context) => const UserLogin(),
+    signup: (context) => const UserSignUp(),
+    verify: (context) => const VerifyUser(),
+    productspage: (context) => const ProductsPage(),
+    orders: (context) => const MyOrders(),
+    profile: (context) => const ProfileScreen(),
+    settings: (context) => const Settings(),
+    ordertrack: (context) => const OrderTrack(),
+    paymentmethod: (context) => const PaymentMethod(),
+    forgetpassword: (context) => const ForgetPassword(),
   };
 }
