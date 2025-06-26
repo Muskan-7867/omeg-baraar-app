@@ -1,8 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogOutSheetCart extends StatelessWidget {
   const LogOutSheetCart({super.key});
+
+  Future<void> _logOut(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('authToken');
+
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Logged out successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      // Show error message if logout fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logout failed: ${e.toString()}'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +36,6 @@ class LogOutSheetCart extends StatelessWidget {
       color: Colors.white,
       height: 260,
       width: double.infinity,
-
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -54,9 +79,7 @@ class LogOutSheetCart extends StatelessWidget {
                 SizedBox(
                   width: 180,
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => _logOut(context),
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
                         AppColour.primaryColor,
