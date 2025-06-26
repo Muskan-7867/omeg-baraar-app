@@ -4,6 +4,7 @@ import 'package:omeg_bazaar/services/user_signin.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/divider_signup.dart';
 import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({super.key});
@@ -25,6 +26,11 @@ class _UserLoginState extends State<UserLogin> {
     super.dispose();
   }
 
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('authToken', token);
+  }
+
   Future<void> _loginUser() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -41,6 +47,9 @@ class _UserLoginState extends State<UserLogin> {
       if (!mounted) return;
 
       if (result['success'] == true) {
+        if (result['token'] != null) {
+          await _saveToken(result['token']);
+        }
         _emailController.clear();
         _passwordController.clear();
         _formKey.currentState?.reset();
