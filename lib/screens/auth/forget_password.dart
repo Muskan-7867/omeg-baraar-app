@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/services/forgot_password_api.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -10,6 +11,7 @@ class ForgetPassword extends StatefulWidget {
 class _ForgetPasswordState extends State<ForgetPassword> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -17,12 +19,38 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       final email = _emailController.text.trim();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Password reset link sent to $email")),
-      );
+
+      try {
+        final result = await ForgotPassword().forgetpassword(email);
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(result['message'])));
+
+        if (result['success'] == true) {
+          // Optionally navigate back after a delay
+          Future.delayed(const Duration(seconds: 2), () {
+            if (mounted) Navigator.pop(context);
+          });
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     }
   }
 
@@ -59,8 +87,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
-
-                const SizedBox(height: 40),
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -81,8 +107,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 ),
                 const SizedBox(height: 60),
                 ElevatedButton(
-                  onPressed: _submit,
-                  child: const Text("Send Reset Link"),
+                  onPressed: _isLoading ? null : _submit,
+                  child:
+                      _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text("Send Reset Link"),
                 ),
               ],
             ),
