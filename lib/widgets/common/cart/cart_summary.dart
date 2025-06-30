@@ -1,15 +1,23 @@
+// cart_summary.dart
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/checkout/checkout.dart';
+import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class CartSummary extends StatelessWidget {
   final List<Map<String, dynamic>> cartProducts;
   final List<int> quantities;
+  final String token;
+  final Map<String, dynamic>? address;
+  final String paymentMethod;
 
   const CartSummary({
     super.key,
     required this.cartProducts,
     required this.quantities,
+    required this.token,
+    required this.address,
+    required this.paymentMethod,
   });
 
   @override
@@ -27,7 +35,7 @@ class CartSummary extends StatelessWidget {
 
       totalPrice += price * qty;
       deliveryCharges += delivery;
-      totalQuantity += qty; 
+      totalQuantity += qty;
     }
 
     int averageDeliveryCharges =
@@ -55,17 +63,62 @@ class CartSummary extends StatelessWidget {
                   AppColour.primaryColor,
                 ),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
+              onPressed: () async {
+                if (address == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please set your address')),
+                  );
+                  return;
+                }
+                try {
+                  // Prepare data for API call
+                  final cartProductIds =
+                      cartProducts.map((p) => p['_id'].toString()).toList();
+
+                  // Show loading indicator
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
                     builder:
-                        (context) => Checkout(
-                          cartProducts: cartProducts,
-                          quantities: quantities,
-                        ),
-                  ),
-                );
+                        (context) =>
+                            const Center(child: CircularProgressIndicator()),
+                  );
+
+                  // Call the API
+                  final response =
+                      await CartProductsOrderApi.createRazorPayOrderOfCart(
+                        cartProductIds: cartProductIds,
+                        address: address,
+                        quantities: quantities,
+                        paymentMethod: paymentMethod,
+                        token: token,
+                      );
+
+                  // Close loading indicator
+                  Navigator.of(context).pop();
+
+                  // Navigate to checkout with the response
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => Checkout(
+                            cartProducts: cartProducts,
+                            quantities: quantities,
+                          ),
+                    ),
+                  );
+                } catch (e) {
+                  // Close loading indicator if still showing
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+
+                  // Show error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: ${e.toString()}')),
+                  );
+                }
               },
               child: const Text(
                 "Proceed To Checkout",

@@ -9,7 +9,7 @@ import 'package:omeg_bazaar/screens/intro/intro.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/order.dart';
 import 'package:omeg_bazaar/screens/profile/payment-methods/payment_method.dart';
 import 'package:omeg_bazaar/screens/product/products_page.dart';
-import 'package:omeg_bazaar/screens/profile/profile.dart';
+import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/screens/profile/settings/settings.dart';
 import 'package:omeg_bazaar/screens/singleproduct/single_product_screen.dart';
 import 'package:omeg_bazaar/screens/splash_screen.dart';

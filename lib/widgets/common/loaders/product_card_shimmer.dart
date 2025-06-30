@@ -26,46 +26,38 @@ class ProductCardShimmer extends StatelessWidget {
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  height: 12,
-                  width: 100,
-                  color: Colors.grey[400],
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                ),
-                const SizedBox(height: 6),
-                Container(
-                  height: 12,
-                  width: 60,
-                  color: Colors.grey[400],
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                ),
-                const Spacer(),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 28,
-                    width: 28,
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(6),
+                  const SizedBox(height: 8),
+                  Container(height: 12, width: 100, color: Colors.grey[400]),
+                  const SizedBox(height: 6),
+                  Container(height: 12, width: 60, color: Colors.grey[400]),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      height: 28,
+                      width: 28,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

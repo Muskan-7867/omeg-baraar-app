@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
-import 'package:omeg_bazaar/services/cart_helper.dart';
+import 'package:omeg_bazaar/services/cart/cart_helper.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_info_and_cartbtn.dart';
 import 'package:provider/provider.dart';
 
