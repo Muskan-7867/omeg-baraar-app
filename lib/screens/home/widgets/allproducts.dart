@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/services/get_products_api.dart';
+import 'package:omeg_bazaar/services/product/get_products_api.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
 
 

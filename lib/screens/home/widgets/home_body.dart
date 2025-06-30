@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/home/widgets/banner.dart';
 import 'package:omeg_bazaar/screens/home/widgets/home_categories.dart';
-import 'package:omeg_bazaar/screens/home/widgets/home_products.dart';
 import 'package:omeg_bazaar/screens/home/widgets/search_bar.dart';
-import 'package:omeg_bazaar/services/get_category_api.dart';
-import 'package:omeg_bazaar/services/get_product_by_category.dart';
-import 'package:omeg_bazaar/services/get_products_api.dart';
+import 'package:omeg_bazaar/services/product/get_category_api.dart';
+import 'package:omeg_bazaar/services/product/get_product_by_query.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
+import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
+import 'package:omeg_bazaar/widgets/common/title.dart'; // Import the new API
 
 class HomeBody extends StatefulWidget {
   final VoidCallback onSeeAllPressed;
@@ -20,6 +21,39 @@ class _HomeBodyState extends State<HomeBody> {
   String selectedCategory = '';
   bool isCategoryLoading = true;
   bool isProductsLoading = true;
+  String searchQuery = '';
+  bool isSearching = false;
+  final GetFilteredProducts _productsService =
+      GetFilteredProducts(); // Create service instance
+
+  Future<void> searchProducts(String query) async {
+    setState(() {
+      isProductsLoading = true;
+      searchQuery = query;
+      isSearching = query.isNotEmpty;
+      selectedCategory = '';
+    });
+
+    try {
+      if (query.isEmpty) {
+        await fetchAllProducts();
+      } else {
+        final data = await _productsService.fetchFilteredProducts(
+          search: query,
+          limit: 10,
+        );
+        setState(() {
+          displayedProducts = data;
+        });
+      }
+    } catch (e) {
+      print('Search error: $e');
+    } finally {
+      setState(() {
+        isProductsLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -39,7 +73,6 @@ class _HomeBodyState extends State<HomeBody> {
         isCategoryLoading = false;
       });
     } catch (e) {
-      // print('Category fetch error: $e');
       setState(() {
         isCategoryLoading = false;
       });
@@ -48,15 +81,14 @@ class _HomeBodyState extends State<HomeBody> {
 
   Future<void> fetchAllProducts() async {
     try {
-      final data = await GetProductsApiCall().getProducts();
-      final topProducts = data.cast<Map<String, dynamic>>().take(10).toList();
+      final data = await _productsService.fetchFilteredProducts(limit: 10);
       setState(() {
-        displayedProducts = topProducts;
+        displayedProducts = data;
         isProductsLoading = false;
         selectedCategory = '';
+        isSearching = false;
       });
     } catch (e) {
-      // print('All products fetch error: $e');
       setState(() {
         isProductsLoading = false;
       });
@@ -67,17 +99,19 @@ class _HomeBodyState extends State<HomeBody> {
     setState(() {
       isProductsLoading = true;
       selectedCategory = categoryName;
+      isSearching = false;
     });
 
     try {
-      final data = await GetProdByCategory().getProductsByCategory(
-        categoryName,
+      final data = await _productsService.fetchFilteredProducts(
+        category: categoryName,
+        limit: 10,
       );
       setState(() {
-        displayedProducts = data.cast<Map<String, dynamic>>();
+        displayedProducts = data;
       });
     } catch (e) {
-      // print('Product fetch error: $e');
+      print('Product fetch error: $e');
     } finally {
       setState(() {
         isProductsLoading = false;
@@ -89,14 +123,14 @@ class _HomeBodyState extends State<HomeBody> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      //customscrollview allows you to use slivers, which are scrollable areas with advanced control (like pinning, floating, etc.).
       child: CustomScrollView(
         slivers: [
-          // /SliverPersistentHeader This is a special type of sliver that lets you "pin" a widget to the top when scrolling.
           SliverPersistentHeader(
             pinned: true,
-            delegate: _SearchBarDelegate(),
-          ), //Supplies the widget (your CustomSearchBar) and layout behavior (height, rebuild conditions).
+            delegate: _SearchBarDelegate(
+              onSearch: searchProducts,
+            ), // Pass callback
+          ),
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,6 +152,7 @@ class _HomeBodyState extends State<HomeBody> {
                   isLoading: isProductsLoading,
                   selectedCategory: selectedCategory,
                   onSeeAllPressed: widget.onSeeAllPressed,
+                  isSearching: isSearching, // Pass search state
                 ),
               ],
             ),
@@ -129,6 +164,10 @@ class _HomeBodyState extends State<HomeBody> {
 }
 
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
+  final Function(String) onSearch; // Search callback
+
+  _SearchBarDelegate({required this.onSearch});
+
   @override
   double get minExtent => 70;
   @override
@@ -144,10 +183,66 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
       color: Colors.white,
       padding: const EdgeInsets.all(4),
       alignment: Alignment.centerLeft,
-      child: const CustomSearchBar(),
+      child: CustomSearchBar(onSearch: onSearch), // Connect search callback
     );
   }
 
   @override
-  bool shouldRebuild(_SearchBarDelegate oldDelegate) => false;
+  bool shouldRebuild(_SearchBarDelegate oldDelegate) =>
+      oldDelegate.onSearch != onSearch;
+}
+
+class ProductsOnHomePage extends StatelessWidget {
+  final List<Map<String, dynamic>> displayedProducts;
+  final bool isLoading;
+  final String selectedCategory;
+  final VoidCallback onSeeAllPressed;
+  final bool isSearching; // Search state
+
+  const ProductsOnHomePage({
+    super.key,
+    required this.displayedProducts,
+    required this.isLoading,
+    required this.selectedCategory,
+    required this.onSeeAllPressed,
+    required this.isSearching,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TitleWidget(
+          title:
+              isSearching
+                  ? 'Search Results'
+                  : selectedCategory.isEmpty
+                  ? 'Top Picks for You'
+                  : 'Products in "$selectedCategory"',
+          onSeeAll: onSeeAllPressed,
+        ),
+        const SizedBox(height: 10),
+        isLoading
+            ? const ProductCardShimmer()
+            : displayedProducts.isEmpty
+            ? const Center(child: Text("No products found."))
+            : GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: displayedProducts.length,
+              padding: const EdgeInsets.only(top: 20),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.75,
+              ),
+              itemBuilder: (context, index) {
+                return ProductCard(product: displayedProducts[index]);
+              },
+            ),
+      ],
+    );
+  }
 }

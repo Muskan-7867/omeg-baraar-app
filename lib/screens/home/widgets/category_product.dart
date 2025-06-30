@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/services/get_category_api.dart';
-import 'package:omeg_bazaar/services/get_product_by_category.dart';
+import 'package:omeg_bazaar/services/product/get_category_api.dart';
+import 'package:omeg_bazaar/services/product/get_product_by_category.dart';
 import 'package:omeg_bazaar/widgets/common/category/category_btn.dart';
 import 'package:omeg_bazaar/widgets/common/loaders/category_shimmer_loader.dart';
 import 'package:omeg_bazaar/screens/home/widgets/products.dart';
