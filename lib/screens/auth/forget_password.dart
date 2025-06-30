@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/services/forgot_password_api.dart';
+import 'package:omeg_bazaar/services/user/forgot_password_api.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});

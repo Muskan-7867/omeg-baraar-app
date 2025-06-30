@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/auth/signin_form.dart';
-import 'package:omeg_bazaar/services/user_signin.dart';
+import 'package:omeg_bazaar/services/user/user_signin.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/divider_signup.dart';
 import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
