@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/product/widget/category_section.dart';
 import 'package:omeg_bazaar/screens/product/widget/filter_action_btn.dart';
 import 'package:omeg_bazaar/screens/product/widget/price_slider.dart';
-import 'package:omeg_bazaar/services/get_category_api.dart';
+import 'package:omeg_bazaar/services/product/get_category_api.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class FilterBar extends StatefulWidget {
