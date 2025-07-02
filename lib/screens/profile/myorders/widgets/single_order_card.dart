@@ -4,7 +4,7 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 class OrderProductCard extends StatelessWidget {
   final String imageUrl;
   final String title;
-  final String size;
+  final String status;
   final int quantity;
   final double price;
 
@@ -12,7 +12,7 @@ class OrderProductCard extends StatelessWidget {
     super.key,
     required this.imageUrl,
     required this.title,
-    required this.size,
+    required this.status,
     required this.quantity,
     required this.price,
   });
@@ -51,7 +51,7 @@ class OrderProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Qty : ${quantity}pcs',
+                    'Qty : $quantity',
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   const SizedBox(height: 8),
@@ -60,6 +60,14 @@ class OrderProductCard extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
+                    ),
+                  ),
+
+                  Text(
+                    ' $status',
+                    style: TextStyle(
+                      color: _getStatusColor(status),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
@@ -84,5 +92,20 @@ class OrderProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Color _getStatusColor(String status) {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return Colors.orange;
+    case 'shipped':
+      return Colors.blue;
+    case 'delivered':
+      return Colors.green;
+    case 'cancelled':
+      return Colors.red;
+    default:
+      return Colors.grey;
   }
 }

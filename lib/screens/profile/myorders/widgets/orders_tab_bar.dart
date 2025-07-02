@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/widgets/single_order_card.dart';
+import 'package:omeg_bazaar/screens/profile/myorders/widgets/user_single_order.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/services/order/get_product_by_id.dart';
 
 class OrderTapBar extends StatefulWidget {
-  const OrderTapBar({super.key});
+  final List<dynamic> userOrders;
+  const OrderTapBar({super.key, required this.userOrders});
 
   @override
   State<OrderTapBar> createState() => _OrderTapBarState();
@@ -11,43 +14,69 @@ class OrderTapBar extends StatefulWidget {
 
 class _OrderTapBarState extends State<OrderTapBar>
     with TickerProviderStateMixin {
+  late List<dynamic> allOrders;
+  late List<dynamic> completedOrders;
+  late List<dynamic> deliveredOrders;
+  final Map<String, dynamic> _productCache = {};
+  final Set<String> _pendingFetches = {};
+
   final List<String> tabs = ['All', 'Completed', 'Delivered'];
 
-  // Sample data for demonstration
-  final List<Map<String, dynamic>> allOrders = [
-    {
-      'imageUrl':
-          'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg',
-      'title': 'Brown Jacket',
-      'size': 'XL',
-      'quantity': 10,
-      'price': 83.97,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    allOrders = widget.userOrders;
+    _categorizeOrders();
+    _prefetchProducts();
+  }
 
-  final List<Map<String, dynamic>> completedOrders = [
-    {
-      'imageUrl':
-          'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg',
-      'title': 'Brown Jackettt',
-      'size': 'L',
-      'quantity': 1,
-      'price': 75.50,
-    },
-  ];
+  void _categorizeOrders() {
+    completedOrders = allOrders.where((order) {
+      return order['status']?.toString().toLowerCase() == 'completed';
+    }).toList();
 
-  final List<Map<String, dynamic>> deliveredOrders = [
-    {
-      'imageUrl':
-          'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg',
-      'title': 'Brown Jacket',
-      'size': 'M',
-      'quantity': 2,
-      'price': 90.00,
-    },
-  ];
+    deliveredOrders = allOrders.where((order) {
+      return order['status']?.toString().toLowerCase() == 'delivered';
+    }).toList();
+  }
 
-  Widget _buildOrderList(List<Map<String, dynamic>> orders) {
+  void _prefetchProducts() {
+    for (final order in allOrders) {
+      final items = order['orderItems'];
+      if (items is List && items.isNotEmpty) {
+        final productId = items[0]['product']?.toString();
+        if (productId != null && 
+            productId.isNotEmpty && 
+            !_productCache.containsKey(productId) &&
+            !_pendingFetches.contains(productId)) {
+          _pendingFetches.add(productId);
+          ProductService.getProductById(productId).then((response) {
+            if (response['success'] == true && response['product'] != null) {
+              if (mounted) {
+                setState(() {
+                  _productCache[productId] = response['product'];
+                  _pendingFetches.remove(productId);
+                });
+              }
+            }
+          }).catchError((_) {
+            _pendingFetches.remove(productId);
+          });
+        }
+      }
+    }
+  }
+
+  String _parseImageUrl(dynamic images) {
+    if (images is List && images.isNotEmpty) {
+      final firstImage = images[0];
+      if (firstImage is String) return firstImage;
+      if (firstImage is Map) return firstImage['url']?.toString() ?? '';
+    }
+    return '';
+  }
+
+  Widget _buildOrderList(List<dynamic> orders) {
     if (orders.isEmpty) {
       return const Center(child: Text('No orders found'));
     }
@@ -56,15 +85,42 @@ class _OrderTapBarState extends State<OrderTapBar>
       itemCount: orders.length,
       itemBuilder: (context, index) {
         final order = orders[index];
-        return OrderProductCard(
-          imageUrl: order['imageUrl'],
-          title: order['title'],
-          size: order['size'],
-          quantity: order['quantity'],
-          price: order['price'],
-          // onTrackOrder: () {
-          //   // Handle track order
-          // },
+        final orderId = order['_id']?.toString() ?? 'N/A';
+        final status = order['status']?.toString() ?? 'Pending';
+        final itemCount = order['orderItems']?.length ?? 0;
+        final price = (order['totalPrice'] is num)
+            ? (order['totalPrice'] as num).toDouble()
+            : 0.0;
+
+        // Get first product ID for preview
+        String? firstProductId;
+        dynamic productDetails;
+        String title = 'Order #${orderId.substring(0, 6)}';
+        String imageUrl = '';
+
+        if (order['orderItems'] is List && order['orderItems'].isNotEmpty) {
+          firstProductId = order['orderItems'][0]['product']?.toString();
+          if (firstProductId != null && _productCache.containsKey(firstProductId)) {
+            productDetails = _productCache[firstProductId];
+            title = productDetails['name'] ?? title;
+            imageUrl = _parseImageUrl(productDetails['images']);
+          }
+        }
+
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserSingleOrder(order: order),
+            ),
+          ),
+          child: OrderProductCard(
+            status: status,
+            imageUrl: imageUrl,
+            title: title,
+            quantity: itemCount,
+            price: price,
+          ),
         );
       },
     );
