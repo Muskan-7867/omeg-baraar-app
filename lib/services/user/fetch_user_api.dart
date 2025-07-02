@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:omeg_bazaar/utills/api.constraints.dart';
+import 'package:omeg_bazaar/utills/api.constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
-   static const baseUrl = ApiConstants.baseUrl;
+  static const baseUrl = ApiConstants.baseUrl;
+  static const _userDataKey = 'user_data';
+  static const _userOrdersKey = 'user_orders';
 
   static Future<Map<String, dynamic>> getUser(String token) async {
     try {
@@ -15,8 +18,15 @@ class UserService {
         },
       );
 
+      final data = json.decode(response.body);
+
+
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        await _saveUserData(data);
+        if (data['user']['order'] != null) {
+          await _saveUserOrders(data['user']['order']);
+        }
+        return data;
       } else {
         throw Exception('Failed to load user data');
       }
@@ -25,59 +35,28 @@ class UserService {
     }
   }
 
-  static Future<List<dynamic>> getUserOrders(String token) async {
-    try {
-      final userResponse = await http.get(
-        Uri.parse("$baseUrl/user/current"),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+  static Future<void> _saveUserData(Map<String, dynamic> userData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userDataKey, json.encode(userData));
+  }
 
-      // print('User response status: ${userResponse.statusCode}');
-      // print('User response body: ${userResponse.body}');
+  static Future<void> _saveUserOrders(List<dynamic> orders) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userOrdersKey, json.encode(orders));
+  }
 
-      if (userResponse.statusCode == 200) {
-        final userData = json.decode(userResponse.body);
-        final List<dynamic> orderIds = userData['orders'] ?? [];
-        // print('Found ${orderIds.length} order IDs');
-
-        List<dynamic> orders = [];
-        for (var orderId in orderIds) {
-          try {
-            final orderResponse = await http.get(
-              Uri.parse("$baseUrl/order/single/$orderId"),
-              headers: {
-                'Authorization': 'Bearer $token',
-                'Content-Type': 'application/json',
-              },
-            );
-
-            // print(
-            //   'Order $orderId response status: ${orderResponse.statusCode}',
-            // );
-            // print('Order $orderId response body: ${orderResponse.body}');
-
-            if (orderResponse.statusCode == 200) {
-              orders.add(json.decode(orderResponse.body));
-            } else {
-              // print(
-              //   'Failed to fetch order $orderId: ${orderResponse.statusCode}',
-              // );
-            }
-          } catch (e) {
-            // print('Error fetching order $orderId: $e');
-          }
-        }
-
-        return orders;
-      } else {
-        throw Exception('Failed to load user data: ${userResponse.statusCode}');
-      }
-    } catch (e) {
-      // print('Error in getUserOrders: $e');
-      throw Exception('Error fetching user orders: $e');
+  static Future<List<dynamic>?> getSavedUserOrders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final ordersString = prefs.getString(_userOrdersKey);
+    if (ordersString != null) {
+      return json.decode(ordersString) as List<dynamic>;
     }
+    return null;
+  }
+
+  static Future<void> clearUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userDataKey);
+    await prefs.remove(_userOrdersKey);
   }
 }
