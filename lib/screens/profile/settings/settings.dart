@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/profile/profile.dart';
+import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/profile_dropdowns.dart';
 
 class Settings extends StatelessWidget {

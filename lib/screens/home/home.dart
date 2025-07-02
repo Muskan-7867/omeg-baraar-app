@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/home/widgets/home_body.dart';
 import 'package:omeg_bazaar/screens/product/products_page.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/order.dart';
+import 'package:omeg_bazaar/screens/profile/myorders/my_orders.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/app_bar.dart';
 

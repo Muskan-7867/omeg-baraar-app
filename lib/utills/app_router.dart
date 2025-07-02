@@ -6,7 +6,7 @@ import 'package:omeg_bazaar/screens/auth/verify.dart';
 import 'package:omeg_bazaar/screens/checkout/add_address.dart';
 import 'package:omeg_bazaar/screens/home/home.dart';
 import 'package:omeg_bazaar/screens/intro/intro.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/order.dart';
+import 'package:omeg_bazaar/screens/profile/myorders/my_orders.dart';
 import 'package:omeg_bazaar/screens/profile/payment-methods/payment_method.dart';
 import 'package:omeg_bazaar/screens/product/products_page.dart';
 import 'package:omeg_bazaar/screens/profile/user_profile.dart';
