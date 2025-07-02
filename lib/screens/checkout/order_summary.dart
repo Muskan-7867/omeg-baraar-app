@@ -4,11 +4,13 @@ import 'package:omeg_bazaar/screens/checkout/summary_row.dart';
 class OrderSummary extends StatelessWidget {
   final List<dynamic> cartProducts;
   final List<int> quantities;
+  final bool isBuyNow;
 
   const OrderSummary({
     super.key,
     required this.cartProducts,
     required this.quantities,
+    required this.isBuyNow,
   });
 
   @override
@@ -26,9 +28,8 @@ class OrderSummary extends StatelessWidget {
       deliveryCharges += delivery;
     }
 
-    double averageDeliveryCharges = cartProducts.isNotEmpty
-        ? deliveryCharges / cartProducts.length
-        : 0;
+    double averageDeliveryCharges =
+        cartProducts.isNotEmpty ? deliveryCharges / cartProducts.length : 0;
 
     double grandTotal = itemsTotal + averageDeliveryCharges;
 
@@ -37,16 +38,9 @@ class OrderSummary extends StatelessWidget {
       child: Column(
         children: [
           SummaryRow(label: 'Items Total', value: itemsTotal),
-          SummaryRow(
-            label: 'Delivery Charges',
-            value: averageDeliveryCharges,
-          ),
+          SummaryRow(label: 'Delivery Charges', value: averageDeliveryCharges),
           const Divider(),
-          SummaryRow(
-            label: 'Grand Total',
-            value: grandTotal,
-            isBold: true,
-          ),
+          SummaryRow(label: 'Grand Total', value: grandTotal, isBold: true),
           const SizedBox(height: 10),
         ],
       ),

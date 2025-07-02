@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:omeg_bazaar/utills/api.constraints.dart';
+import 'package:omeg_bazaar/utills/api.constants.dart';
 
 //http://10.0.2.2:3000
 class GetCartProdById {

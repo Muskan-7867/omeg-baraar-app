@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:omeg_bazaar/utills/api.constraints.dart';
+import 'package:omeg_bazaar/utills/api.constants.dart';
 
 class GetCategoryApiCall {
   static const String baseUrl = ApiConstants.baseUrl;
