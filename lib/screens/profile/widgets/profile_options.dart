@@ -22,7 +22,7 @@ class ProfileOptions extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 121, 121, 121),
+                        color: const Color.fromARGB(255, 121, 121, 121),
                       ),
                     ),
                     Text(
