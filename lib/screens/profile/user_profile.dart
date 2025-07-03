@@ -16,7 +16,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   Map<String, dynamic>? userData;
   List<dynamic>? userOrders;
-  bool isLoading = true;
+  bool isLoading = false;
+  bool showUserInfoLoader = false;
 
   @override
   void initState() {
@@ -25,18 +26,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
+    // Show loader only if data takes more than 300ms to load
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted && isLoading) {
+        setState(() => showUserInfoLoader = true);
+      }
+    });
+
+    setState(() => isLoading = true);
+
     try {
       final data = await ProfileDataService.loadUserData();
-      setState(() {
-        userData = data['userData'];
-        userOrders = data['userOrders'];
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          userData = data['userData'];
+          userOrders = data['userOrders'];
+          isLoading = false;
+          showUserInfoLoader = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-        userOrders = [];
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          showUserInfoLoader = false;
+          userOrders = [];
+        });
+      }
     }
   }
 
@@ -57,36 +73,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: const Icon(Icons.arrow_back),
         ),
       ),
-      body:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    UserInfo(user: userData),
-                    const SizedBox(height: 20),
-                    const ProfileOptions(),
-                    const SizedBox(height: 20),
-                    ...options.map(
-                      (item) => Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            child: ProfileDropdown(
-                              icon: item['icon'] as IconData,
-                              title: item['title'] as String,
-                              onTap: item['onTap'] as VoidCallback,
-                            ),
-                          ),
-                        ],
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                UserInfo(user: userData),
+                if (showUserInfoLoader)
+                  SizedBox(
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const ProfileOptions(),
+            const SizedBox(height: 20),
+            ...options.map(
+              (item) => Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
                     ),
-                  ],
-                ),
+                    child: ProfileDropdown(
+                      icon: item['icon'] as IconData,
+                      title: item['title'] as String,
+                      onTap: item['onTap'] as VoidCallback,
+                    ),
+                  ),
+                ],
               ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

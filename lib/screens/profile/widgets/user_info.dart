@@ -34,7 +34,7 @@ class UserInfo extends StatelessWidget {
             ),
           ),
           Text(
-            user?['email'],
+            user?['email'] ?? 'No email provided',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
