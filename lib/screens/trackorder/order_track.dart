@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/order.dart';
 import 'package:omeg_bazaar/screens/trackorder/widgets/order_timeline.dart';
 import 'package:omeg_bazaar/screens/trackorder/widgets/tarck_order_card.dart';
 
 class OrderTrack extends StatefulWidget {
-  const OrderTrack({super.key});
+  final String orderId;
+  final String productImage;
+  final String productTitle;
+  final double productPrice;
+  final int quantity;
+  final String status;
+  final String expectedDelivery;
+
+  const OrderTrack({
+    super.key,
+    required this.orderId,
+    required this.productImage,
+    required this.productTitle,
+    required this.productPrice,
+    required this.quantity,
+    required this.status,
+    required this.expectedDelivery,
+  });
+
   @override
   State<OrderTrack> createState() => _OrderTrackState();
 }
@@ -18,10 +35,7 @@ class _OrderTrackState extends State<OrderTrack> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const MyOrders()),
-            );
+            Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -30,12 +44,11 @@ class _OrderTrackState extends State<OrderTrack> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TrackOrderProductCard(
-            imageUrl:
-                'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg',
-            title: 'title',
-            size: 'size',
-            quantity: 1,
-            price: 1000,
+            imageUrl: widget.productImage,
+            title: widget.productTitle,
+            size: 'size', // You might want to add this to your parameters
+            quantity: widget.quantity,
+            price: widget.productPrice,
           ),
           const Divider(),
           const Padding(
@@ -51,20 +64,29 @@ class _OrderTrackState extends State<OrderTrack> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Expected Delivery Date:'),
-                    Text('20 JUNE, 2025'),
+                  children: [
+                    const Text('Expected Delivery Date:'),
+                    Text(widget.expectedDelivery),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [Text('Tracking Id:'), Text('tk345261')],
+                  children: [const Text('Tracking Id:'), Text(widget.orderId)],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [Text('Order Status:'), Text('Shipped')],
+                  children: [
+                    const Text('Order Status:'),
+                    Text(
+                      widget.status,
+                      style: TextStyle(
+                        color: _getStatusColor(widget.status),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -81,11 +103,28 @@ class _OrderTrackState extends State<OrderTrack> {
             height: 500,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: OrderTimeLine(),
+              child: OrderTimeLine(
+                // Pass status to timeline if needed
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return Colors.orange;
+      case 'shipped':
+        return Colors.blue;
+      case 'delivered':
+        return Colors.green;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

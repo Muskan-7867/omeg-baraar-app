@@ -13,7 +13,6 @@ import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/screens/profile/settings/settings.dart';
 import 'package:omeg_bazaar/screens/singleproduct/single_product_screen.dart';
 import 'package:omeg_bazaar/screens/splash_screen.dart';
-import 'package:omeg_bazaar/screens/trackorder/order_track.dart';
 
 class AppRouter {
   static const String splash = '/';
@@ -23,7 +22,7 @@ class AppRouter {
   static const String login = '/login';
   static const String signup = '/signup';
   static const String verify = '/verify';
-  static const String productspage = '/productspage';
+  static const String products = '/products';
   static const String checkout = '/checkout';
   static const String orders = '/orders';
   static const String profile = '/profile';
@@ -48,11 +47,10 @@ class AppRouter {
     login: (context) => const UserLogin(),
     signup: (context) => const UserSignUp(),
     verify: (context) => const VerifyUser(),
-    productspage: (context) => const ProductsPage(),
+    products: (context) => const ProductsPage(),
     orders: (context) => const MyOrders(),
     profile: (context) => const ProfileScreen(),
     settings: (context) => const Settings(),
-    ordertrack: (context) => const OrderTrack(),
     paymentmethod: (context) => const PaymentMethod(),
     forgetpassword: (context) => const ForgetPassword(),
     addressform: (context) => const AddressForm(),

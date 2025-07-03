@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:omeg_bazaar/utills/api.constants.dart';
 
 class GetFilteredProducts {
-  static const String baseUrl =  ApiConstants.baseUrl;
+  static const String baseUrl = ApiConstants.baseUrl;
 
   Future<List<Map<String, dynamic>>> fetchFilteredProducts({
-    int limit = 10,
+    int limit = 15,
     int page = 1,
     String? category,
     String? search,
