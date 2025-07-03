@@ -8,6 +8,7 @@ class ProductsOnHomePage extends StatelessWidget {
   final bool isLoading;
   final String selectedCategory;
   final VoidCallback onSeeAllPressed;
+    final bool isSearching; 
 
   const ProductsOnHomePage({
     super.key,
@@ -15,6 +16,8 @@ class ProductsOnHomePage extends StatelessWidget {
     required this.isLoading,
     required this.selectedCategory,
     required this.onSeeAllPressed,
+    required this.isSearching,
+
   });
 
   @override
@@ -24,7 +27,9 @@ class ProductsOnHomePage extends StatelessWidget {
       children: [
         TitleWidget(
           title:
-              selectedCategory.isEmpty
+              isSearching
+                  ? 'Search Results'
+                  : selectedCategory.isEmpty
                   ? 'Top Picks for You'
                   : 'Products in "$selectedCategory"',
           onSeeAll: onSeeAllPressed,
