@@ -15,12 +15,12 @@ class OrderTapBar extends StatefulWidget {
 class _OrderTapBarState extends State<OrderTapBar>
     with TickerProviderStateMixin {
   late List<dynamic> allOrders;
-  late List<dynamic> completedOrders;
+  late List<dynamic> processingOrders; // Changed from completedOrders
   late List<dynamic> deliveredOrders;
   final Map<String, dynamic> _productCache = {};
   final Set<String> _pendingFetches = {};
 
-  final List<String> tabs = ['All', 'Completed', 'Delivered'];
+  final List<String> tabs = ['All', 'Processing', 'Delivered'];
 
   @override
   void initState() {
@@ -31,13 +31,19 @@ class _OrderTapBarState extends State<OrderTapBar>
   }
 
   void _categorizeOrders() {
-    completedOrders = allOrders.where((order) {
-      return order['status']?.toString().toLowerCase() == 'completed';
-    }).toList();
+    processingOrders =
+        allOrders.where((order) {
+          final status = order['status']?.toString().toLowerCase();
+          return status != 'delivered' &&
+              status != 'completed'; // Changed logic
+        }).toList();
 
-    deliveredOrders = allOrders.where((order) {
-      return order['status']?.toString().toLowerCase() == 'delivered';
-    }).toList();
+    deliveredOrders =
+        allOrders.where((order) {
+          final status = order['status']?.toString().toLowerCase();
+          return status == 'delivered' ||
+              status == 'completed'; // Combined delivered and completed
+        }).toList();
   }
 
   void _prefetchProducts() {
@@ -45,23 +51,26 @@ class _OrderTapBarState extends State<OrderTapBar>
       final items = order['orderItems'];
       if (items is List && items.isNotEmpty) {
         final productId = items[0]['product']?.toString();
-        if (productId != null && 
-            productId.isNotEmpty && 
+        if (productId != null &&
+            productId.isNotEmpty &&
             !_productCache.containsKey(productId) &&
             !_pendingFetches.contains(productId)) {
           _pendingFetches.add(productId);
-          ProductService.getProductById(productId).then((response) {
-            if (response['success'] == true && response['product'] != null) {
-              if (mounted) {
-                setState(() {
-                  _productCache[productId] = response['product'];
-                  _pendingFetches.remove(productId);
-                });
-              }
-            }
-          }).catchError((_) {
-            _pendingFetches.remove(productId);
-          });
+          ProductService.getProductById(productId)
+              .then((response) {
+                if (response['success'] == true &&
+                    response['product'] != null) {
+                  if (mounted) {
+                    setState(() {
+                      _productCache[productId] = response['product'];
+                      _pendingFetches.remove(productId);
+                    });
+                  }
+                }
+              })
+              .catchError((_) {
+                _pendingFetches.remove(productId);
+              });
         }
       }
     }
@@ -88,9 +97,10 @@ class _OrderTapBarState extends State<OrderTapBar>
         final orderId = order['_id']?.toString() ?? 'N/A';
         final status = order['status']?.toString() ?? 'Pending';
         final itemCount = order['orderItems']?.length ?? 0;
-        final price = (order['totalPrice'] is num)
-            ? (order['totalPrice'] as num).toDouble()
-            : 0.0;
+        final price =
+            (order['totalPrice'] is num)
+                ? (order['totalPrice'] as num).toDouble()
+                : 0.0;
 
         // Get first product ID for preview
         String? firstProductId;
@@ -100,7 +110,8 @@ class _OrderTapBarState extends State<OrderTapBar>
 
         if (order['orderItems'] is List && order['orderItems'].isNotEmpty) {
           firstProductId = order['orderItems'][0]['product']?.toString();
-          if (firstProductId != null && _productCache.containsKey(firstProductId)) {
+          if (firstProductId != null &&
+              _productCache.containsKey(firstProductId)) {
             productDetails = _productCache[firstProductId];
             title = productDetails['name'] ?? title;
             imageUrl = _parseImageUrl(productDetails['images']);
@@ -108,12 +119,13 @@ class _OrderTapBarState extends State<OrderTapBar>
         }
 
         return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UserSingleOrder(order: order),
-            ),
-          ),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserSingleOrder(order: order),
+                ),
+              ),
           child: OrderProductCard(
             status: status,
             imageUrl: imageUrl,
@@ -144,7 +156,9 @@ class _OrderTapBarState extends State<OrderTapBar>
               child: TabBarView(
                 children: [
                   _buildOrderList(allOrders),
-                  _buildOrderList(completedOrders),
+                  _buildOrderList(
+                    processingOrders,
+                  ), // Changed from completedOrders
                   _buildOrderList(deliveredOrders),
                 ],
               ),

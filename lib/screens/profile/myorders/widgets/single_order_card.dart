@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/screens/trackorder/order_track.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class OrderProductCard extends StatelessWidget {
@@ -75,7 +76,22 @@ class OrderProductCard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/ordertrack');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => OrderTrack(
+                          orderId: 'tk345261', // Replace with actual order ID
+                          productImage: imageUrl,
+                          productTitle: title,
+                          productPrice: price,
+                          quantity: quantity,
+                          status: status,
+                          expectedDelivery:
+                              '20 JUNE, 2025', // Replace with actual date
+                        ),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColour.primaryColor,
