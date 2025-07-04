@@ -4,8 +4,10 @@ import 'package:omeg_bazaar/screens/home/widgets/home_categories.dart';
 import 'package:omeg_bazaar/screens/home/widgets/search_bar.dart';
 import 'package:omeg_bazaar/services/product/get_category_api.dart';
 import 'package:omeg_bazaar/services/product/get_product_by_query.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
+import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
 import 'package:omeg_bazaar/widgets/common/title.dart';
 
 class HomeBody extends StatefulWidget {
@@ -18,7 +20,8 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   List categories = [];
   List<Map<String, dynamic>> displayedProducts = [];
-  String selectedCategoryId = ''; // Changed from selectedCategory to selectedCategoryId
+  String selectedCategoryId =
+      ''; // Changed from selectedCategory to selectedCategoryId
   bool isCategoryLoading = true;
   bool isProductsLoading = true;
   String searchQuery = '';
@@ -132,9 +135,7 @@ class _HomeBodyState extends State<HomeBody> {
         slivers: [
           SliverPersistentHeader(
             pinned: true,
-            delegate: _SearchBarDelegate(
-              onSearch: searchProducts,
-            ),
+            delegate: _SearchBarDelegate(onSearch: searchProducts),
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -153,11 +154,26 @@ class _HomeBodyState extends State<HomeBody> {
                 ProductsOnHomePage(
                   displayedProducts: displayedProducts,
                   isLoading: isProductsLoading,
-                  selectedCategoryName: selectedCategoryId.isEmpty
-                      ? ''
-                      : getCategoryName(selectedCategoryId),
+                  selectedCategoryName:
+                      selectedCategoryId.isEmpty
+                          ? ''
+                          : getCategoryName(selectedCategoryId),
                   onSeeAllPressed: widget.onSeeAllPressed,
                   isSearching: isSearching,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Center(
+                    child: RoundedButton(
+                      onTap: widget.onSeeAllPressed,
+                      title: 'See All Products',
+                      bgColor: AppColour.primaryColor,
+                      borderRadius: 60,
+                      width: 180,
+                      height: 45,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -219,9 +235,10 @@ class ProductsOnHomePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleWidget(
-          title: isSearching
-              ? 'Search Results'
-              : selectedCategoryName.isEmpty
+          title:
+              isSearching
+                  ? 'Search Results'
+                  : selectedCategoryName.isEmpty
                   ? 'Top Picks for You'
                   : 'Products in "$selectedCategoryName"',
           onSeeAll: onSeeAllPressed,
@@ -230,23 +247,22 @@ class ProductsOnHomePage extends StatelessWidget {
         isLoading
             ? const ProductCardShimmer()
             : displayedProducts.isEmpty
-                ? const Center(child: Text("No products found."))
-                : GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: displayedProducts.length,
-                    padding: const EdgeInsets.only(top: 20),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 0.75,
-                    ),
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: displayedProducts[index]);
-                    },
-                  ),
+            ? const Center(child: Text("No products found."))
+            : GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: displayedProducts.length,
+              padding: const EdgeInsets.only(top: 20),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.75,
+              ),
+              itemBuilder: (context, index) {
+                return ProductCard(product: displayedProducts[index]);
+              },
+            ),
       ],
     );
   }

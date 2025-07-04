@@ -3,19 +3,23 @@ import 'package:omeg_bazaar/screens/trackorder/order_track.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class OrderProductCard extends StatelessWidget {
+  final String orderId;
   final String imageUrl;
   final String title;
   final String status;
   final int quantity;
   final double price;
+  final  String expectedDeliveryDate;
 
   const OrderProductCard({
     super.key,
+    required this.orderId,
     required this.imageUrl,
     required this.title,
     required this.status,
     required this.quantity,
     required this.price,
+    required this.expectedDeliveryDate,
   });
 
   @override
@@ -81,14 +85,13 @@ class OrderProductCard extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => OrderTrack(
-                          orderId: 'tk345261', // Replace with actual order ID
+                          orderId: orderId, 
                           productImage: imageUrl,
                           productTitle: title,
                           productPrice: price,
                           quantity: quantity,
                           status: status,
-                          expectedDelivery:
-                              '20 JUNE, 2025', // Replace with actual date
+                          expectedDeliveryDate: expectedDeliveryDate,
                         ),
                   ),
                 );

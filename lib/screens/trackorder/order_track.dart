@@ -9,7 +9,7 @@ class OrderTrack extends StatefulWidget {
   final double productPrice;
   final int quantity;
   final String status;
-  final String expectedDelivery;
+  final String expectedDeliveryDate;
 
   const OrderTrack({
     super.key,
@@ -19,7 +19,7 @@ class OrderTrack extends StatefulWidget {
     required this.productPrice,
     required this.quantity,
     required this.status,
-    required this.expectedDelivery,
+    required this.expectedDeliveryDate,
   });
 
   @override
@@ -66,7 +66,7 @@ class _OrderTrackState extends State<OrderTrack> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Expected Delivery Date:'),
-                    Text(widget.expectedDelivery),
+                    Text(widget.expectedDeliveryDate),
                   ],
                 ),
                 const SizedBox(height: 10),

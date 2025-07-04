@@ -28,12 +28,10 @@ class _OmAppBarState extends State<OmAppBar> {
 
   Future<void> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getString('authToken') != null;
-    if (mounted && _isLoggedIn != isLoggedIn) {
-      setState(() {
-        _isLoggedIn = isLoggedIn;
-      });
-    }
+    final token = prefs.getString('authToken');
+    setState(() {
+      _isLoggedIn = token != null;
+    });
   }
 
   @override
@@ -49,75 +47,70 @@ class _OmAppBarState extends State<OmAppBar> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 12),
-              child: Stack(
+              child: Row(
                 children: [
-                  Row(
+                  Stack(
                     children: [
-                      Stack(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              cart.loadCartCount();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const CartPage(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.shopping_cart,
-                              size: 28,
-                              color: Colors.white,
-                            ),
-                          ),
-                          if (cart.count > 0)
-                            Positioned(
-                              right: 4,
-                              top: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Text(
-                                  '${cart.count}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
                       IconButton(
                         onPressed: () {
-                          if (_isLoggedIn) {
-                            Navigator.pushNamed(context, '/profile');
-                          } else {
-                            Navigator.pushNamed(
-                              context,
-                              '/login',
-                            ).then((_) => _checkLoginStatus());
-                          }
+                          cart.loadCartCount();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CartPage(),
+                            ),
+                          );
                         },
-                        icon:
-                            _isLoggedIn
-                                ? const Icon(
-                                  Icons.account_circle,
-                                  color: Colors.white,
-                                  size: 32,
-                                )
-                                : Image.asset(
-                                  "assets/icons/login.png",
-                                  color: Colors.white,
-                                  width: 35,
-                                  height: 35,
-                                ),
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          size: 28,
+                          color: Colors.white,
+                        ),
                       ),
+                      if (cart.count > 0)
+                        Positioned(
+                          right: 4,
+                          top: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${cart.count}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (_isLoggedIn) {
+                        Navigator.pushNamed(context, '/profile');
+                      } else {
+                        Navigator.pushNamed(context, '/login').then((_) {
+                          _checkLoginStatus(); // recheck login after returning
+                        });
+                      }
+                    },
+                    icon:
+                        _isLoggedIn
+                            ? const Icon(
+                              Icons.account_circle,
+                              color: Colors.white,
+                              size: 32,
+                            )
+                            : Image.asset(
+                              "assets/icons/login.png",
+                              color: Colors.white,
+                              width: 30,
+                              height: 30,
+                            ),
                   ),
                 ],
               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/widgets/single_order_card.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/widgets/user_single_order.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/services/order/get_product_by_id.dart';
 
@@ -15,7 +14,7 @@ class OrderTapBar extends StatefulWidget {
 class _OrderTapBarState extends State<OrderTapBar>
     with TickerProviderStateMixin {
   late List<dynamic> allOrders;
-  late List<dynamic> processingOrders; // Changed from completedOrders
+  late List<dynamic> processingOrders;
   late List<dynamic> deliveredOrders;
   final Map<String, dynamic> _productCache = {};
   final Set<String> _pendingFetches = {};
@@ -101,6 +100,9 @@ class _OrderTapBarState extends State<OrderTapBar>
             (order['totalPrice'] is num)
                 ? (order['totalPrice'] as num).toDouble()
                 : 0.0;
+   final expectedDeliveryDate = order['expectedDeliveryDate'] != null 
+    ? DateTime.parse(order['expectedDeliveryDate'].toString()).toLocal().toString().split(' ')[0]
+    : '';
 
         // Get first product ID for preview
         String? firstProductId;
@@ -118,21 +120,14 @@ class _OrderTapBarState extends State<OrderTapBar>
           }
         }
 
-        return GestureDetector(
-          onTap:
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserSingleOrder(order: order),
-                ),
-              ),
-          child: OrderProductCard(
-            status: status,
-            imageUrl: imageUrl,
-            title: title,
-            quantity: itemCount,
-            price: price,
-          ),
+        return OrderProductCard(
+          orderId: orderId,
+          status: status,
+          imageUrl: imageUrl,
+          title: title,
+          quantity: itemCount,
+          price: price,
+          expectedDeliveryDate: expectedDeliveryDate,
         );
       },
     );

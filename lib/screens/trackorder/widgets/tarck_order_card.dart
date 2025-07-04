@@ -52,7 +52,7 @@ class TrackOrderProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Qty : ${quantity}pcs',
+                    'Qty : $quantity',
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   const SizedBox(height: 8),

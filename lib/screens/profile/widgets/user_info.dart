@@ -26,7 +26,7 @@ class UserInfo extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            user?['username'] ?? 'Muskan',
+            user?['username'] ?? 'No username provided',
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

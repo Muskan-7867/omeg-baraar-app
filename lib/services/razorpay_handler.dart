@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/services/order/buy_now_product_api.dart';
 import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
+import 'package:omeg_bazaar/utills/api.constants.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayHandler {
@@ -68,7 +69,7 @@ class RazorpayHandler {
       final razorpayOrder = response['razorpayOrder'];
 
       final options = {
-        'key': 'rzp_test_XSMd17B3zbeJ02',
+        'key': ApiConstants.razorPayId,
         'amount': razorpayOrder['amount'].toString(),
         'currency': razorpayOrder['currency'],
         'name': 'Omeg Bazaar',
