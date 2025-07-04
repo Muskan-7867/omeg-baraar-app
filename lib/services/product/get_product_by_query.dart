@@ -19,7 +19,7 @@ class GetFilteredProducts {
         'page': page.toString(),
         'minPrice': minPrice.toString(),
         'maxPrice': maxPrice.toString(),
-        if (category != null && category != 'all') 'category': category,
+        if (category != null && category.isNotEmpty) 'category': category,
         if (search != null && search.trim().isNotEmpty) 'search': search,
       },
     );

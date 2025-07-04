@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/home/widgets/banner.dart';
 import 'package:omeg_bazaar/screens/home/widgets/home_categories.dart';
-import 'package:omeg_bazaar/screens/home/widgets/home_products.dart';
 import 'package:omeg_bazaar/screens/home/widgets/search_bar.dart';
 import 'package:omeg_bazaar/services/product/get_category_api.dart';
 import 'package:omeg_bazaar/services/product/get_product_by_query.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
-import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
+import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
+import 'package:omeg_bazaar/widgets/common/title.dart';
 
 class HomeBody extends StatefulWidget {
   final VoidCallback onSeeAllPressed;
@@ -18,19 +18,29 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   List categories = [];
   List<Map<String, dynamic>> displayedProducts = [];
-  String selectedCategory = '';
+  String selectedCategoryId = ''; // Changed from selectedCategory to selectedCategoryId
   bool isCategoryLoading = true;
   bool isProductsLoading = true;
   String searchQuery = '';
   bool isSearching = false;
   final GetFilteredProducts _productsService = GetFilteredProducts();
 
+  // Helper method to get category name from ID
+  String getCategoryName(String id) {
+    if (id.isEmpty) return '';
+    final category = categories.firstWhere(
+      (c) => c['_id'] == id, // Assuming your category objects have '_id' field
+      orElse: () => {'name': ''},
+    );
+    return category['name'];
+  }
+
   Future<void> searchProducts(String query) async {
     setState(() {
       isProductsLoading = true;
       searchQuery = query;
       isSearching = query.isNotEmpty;
-      selectedCategory = '';
+      selectedCategoryId = '';
     });
 
     try {
@@ -39,14 +49,14 @@ class _HomeBodyState extends State<HomeBody> {
       } else {
         final data = await _productsService.fetchFilteredProducts(
           search: query,
-          limit: 15,
+          limit: 10,
         );
         setState(() {
           displayedProducts = data;
         });
       }
     } catch (e) {
-      // print('Search error: $e');
+      print('Search error: $e');
     } finally {
       setState(() {
         isProductsLoading = false;
@@ -84,7 +94,7 @@ class _HomeBodyState extends State<HomeBody> {
       setState(() {
         displayedProducts = data;
         isProductsLoading = false;
-        selectedCategory = '';
+        selectedCategoryId = '';
         isSearching = false;
       });
     } catch (e) {
@@ -94,27 +104,23 @@ class _HomeBodyState extends State<HomeBody> {
     }
   }
 
-  Future<void> fetchProductsByCategory(String categoryName) async {
+  Future<void> fetchProductsByCategory(String categoryId) async {
     setState(() {
       isProductsLoading = true;
-      selectedCategory = categoryName;
+      selectedCategoryId = categoryId;
       isSearching = false;
     });
 
     try {
       final data = await _productsService.fetchFilteredProducts(
-        category: categoryName,
+        category: categoryId,
         limit: 10,
       );
-      setState(() {
-        displayedProducts = data;
-      });
+      setState(() => displayedProducts = data);
     } catch (e) {
-      // print('Product fetch error: $e');
+      print('Product fetch error: $e');
     } finally {
-      setState(() {
-        isProductsLoading = false;
-      });
+      setState(() => isProductsLoading = false);
     }
   }
 
@@ -128,7 +134,7 @@ class _HomeBodyState extends State<HomeBody> {
             pinned: true,
             delegate: _SearchBarDelegate(
               onSearch: searchProducts,
-            ), // Pass callback
+            ),
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -137,35 +143,21 @@ class _HomeBodyState extends State<HomeBody> {
                 const SizedBox(height: 15),
                 const MyBanner(),
                 const SizedBox(height: 10),
-
                 CategoriesOnHomePage(
                   categories: categories,
                   isCategoryLoading: isCategoryLoading,
-                  selectedCategory: selectedCategory,
+                  selectedCategoryId: selectedCategoryId,
                   onCategoryTap: fetchProductsByCategory,
                 ),
-
                 const SizedBox(height: 20),
                 ProductsOnHomePage(
                   displayedProducts: displayedProducts,
                   isLoading: isProductsLoading,
-                  selectedCategory: selectedCategory,
+                  selectedCategoryName: selectedCategoryId.isEmpty
+                      ? ''
+                      : getCategoryName(selectedCategoryId),
                   onSeeAllPressed: widget.onSeeAllPressed,
-                  isSearching: isSearching, // Pass search state
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20, top: 10),
-                  child: Center(
-                    child: RoundedButton(
-                      onTap: widget.onSeeAllPressed,
-                      title: 'See All Products',
-                      bgColor: AppColour.primaryColor,
-                      borderRadius: 60,
-                      width: 180,
-                      height: 45,
-                    ),
-                  ),
+                  isSearching: isSearching,
                 ),
               ],
             ),
@@ -177,7 +169,7 @@ class _HomeBodyState extends State<HomeBody> {
 }
 
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
-  final Function(String) onSearch; // Search callback
+  final Function(String) onSearch;
 
   _SearchBarDelegate({required this.onSearch});
 
@@ -203,4 +195,59 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SearchBarDelegate oldDelegate) =>
       oldDelegate.onSearch != onSearch;
+}
+
+class ProductsOnHomePage extends StatelessWidget {
+  final String selectedCategoryName;
+  final List<Map<String, dynamic>> displayedProducts;
+  final bool isLoading;
+  final VoidCallback onSeeAllPressed;
+  final bool isSearching;
+
+  const ProductsOnHomePage({
+    super.key,
+    required this.displayedProducts,
+    required this.isLoading,
+    required this.onSeeAllPressed,
+    required this.isSearching,
+    required this.selectedCategoryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TitleWidget(
+          title: isSearching
+              ? 'Search Results'
+              : selectedCategoryName.isEmpty
+                  ? 'Top Picks for You'
+                  : 'Products in "$selectedCategoryName"',
+          onSeeAll: onSeeAllPressed,
+        ),
+        const SizedBox(height: 10),
+        isLoading
+            ? const ProductCardShimmer()
+            : displayedProducts.isEmpty
+                ? const Center(child: Text("No products found."))
+                : GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: displayedProducts.length,
+                    padding: const EdgeInsets.only(top: 20),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ProductCard(product: displayedProducts[index]);
+                    },
+                  ),
+      ],
+    );
+  }
 }
