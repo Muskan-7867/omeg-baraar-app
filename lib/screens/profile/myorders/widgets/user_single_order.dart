@@ -34,7 +34,7 @@ class _UserSingleOrderState extends State<UserSingleOrder> {
       setState(() => orderDetails = details);
 
       // Pre-fetch all product details simultaneously
-      final productIds = _getUniqueProductIds(details ?? order);
+      final productIds = _getUniqueProductIds(details);
       await Future.wait(productIds.map(_fetchProductDetails));
     } catch (e) {
       if (mounted) {

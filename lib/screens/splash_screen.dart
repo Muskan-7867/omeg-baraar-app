@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
-import 'package:omeg_bazaar/services/cart_helper.dart';
+import 'package:omeg_bazaar/services/cart/cart_helper.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/utills/app_router.dart';
 import 'package:omeg_bazaar/widgets/uiHelper/ui_helper.dart';
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             UiHelper.customImage(image: 'bag.png'),
             const Text(
-              'Omeg',
+              'OMEG',
               style: TextStyle(fontSize: 50, fontFamily: 'Poppins-Medium'),
             ),
             const Text('Bazaar', style: TextStyle(fontSize: 30)),
