@@ -17,13 +17,7 @@ class UserInfo extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage(
-              user?['avatar'] ??
-                  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-            ),
-          ),
+          CircleAvatar(radius: 50, child: Icon(Icons.person_3_sharp, size: 60)),
           const SizedBox(height: 10),
           Text(
             user?['username'] ?? 'No username provided',

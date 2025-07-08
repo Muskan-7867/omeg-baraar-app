@@ -45,7 +45,6 @@ class RoundedButton extends StatelessWidget {
                       "assets/icons/$iconName",
                       height: 20,
                       width: 20,
-                      color: Colors.white,
                     ),
                     const SizedBox(width: 8),
                     Flexible(

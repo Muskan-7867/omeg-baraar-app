@@ -9,6 +9,8 @@ import 'package:omeg_bazaar/screens/intro/intro.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/my_orders.dart';
 import 'package:omeg_bazaar/screens/profile/payment-methods/payment_method.dart';
 import 'package:omeg_bazaar/screens/product/products_page.dart';
+import 'package:omeg_bazaar/screens/profile/policies/policies.dart';
+
 import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/screens/profile/settings/settings.dart';
 import 'package:omeg_bazaar/screens/singleproduct/single_product_screen.dart';
@@ -31,6 +33,7 @@ class AppRouter {
   static const String forgetpassword = '/forgetpassword';
   static const String paymentmethod = '/paymentmethod';
   static const String addressform = '/addressform';
+    static const String privacy = '/privacy';
 
   static Map<String, Widget Function(BuildContext)> getRoutes() => {
     splash: (context) => const SplashScreen(),
@@ -54,5 +57,7 @@ class AppRouter {
     paymentmethod: (context) => const PaymentMethod(),
     forgetpassword: (context) => const ForgetPassword(),
     addressform: (context) => const AddressForm(),
+    privacy: (context) => const Policies(),
+
   };
 }

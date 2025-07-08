@@ -17,7 +17,11 @@ List<Map<String, dynamic>> getProfileOptions(BuildContext context) {
       'onTap': () => Navigator.pushReplacementNamed(context, "/paymentmethod"),
     },
     {'icon': Icons.help_center, 'title': "Help Center", 'onTap': () {}},
-    {'icon': Icons.privacy_tip, 'title': "Privacy Policy", 'onTap': () {}},
+    {
+      'icon': Icons.privacy_tip,
+      'title': "Privacy Policy",
+      'onTap': () => Navigator.pushReplacementNamed(context, "/privacy"),
+    },
     {
       'icon': Icons.settings,
       'title': "Settings",
