@@ -15,7 +15,7 @@ class SignUpForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 50),
+      padding: const EdgeInsets.symmetric(vertical: 30),
       child: Column(
         children: [
           const Center(
@@ -28,12 +28,12 @@ class SignUpForm extends StatelessWidget {
           const Center(
             child: Text(
               "Create your account to get started on your journey with us",
-              style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
+              style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 30),
           const Center(child: Icon(Icons.lock, size: 80, color: Colors.black)),
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
           TextFormField(
             controller: usernameController,
             decoration: const InputDecoration(
@@ -47,7 +47,7 @@ class SignUpForm extends StatelessWidget {
               return null;
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           TextFormField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
@@ -65,7 +65,7 @@ class SignUpForm extends StatelessWidget {
               return null;
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           TextFormField(
             controller: passwordController,
             obscureText: true,
