@@ -1,7 +1,7 @@
 // api_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:omeg_bazaar/utills/api.constants.dart';
+import 'package:omeg_bazaar/utills/api_constants.dart';
 
 class CartProductsOrderApi {
   static const String baseUrl = ApiConstants.baseUrl;

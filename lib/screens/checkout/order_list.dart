@@ -4,6 +4,7 @@ import 'package:omeg_bazaar/screens/checkout/order_list_data.dart';
 import 'package:omeg_bazaar/screens/checkout/order_summary.dart';
 import 'package:omeg_bazaar/services/order/buy_now_product_api.dart';
 import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
+import 'package:omeg_bazaar/utills/api_constants.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -113,6 +114,29 @@ class _OrderListState extends State<OrderList> {
     });
 
     try {
+      // Get user data from shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final userDataString = prefs.getString('user_data');
+      Map<String, dynamic>? userData;
+      if (userDataString != null) {
+        userData = json.decode(userDataString) as Map<String, dynamic>;
+      }
+
+      String email = ''; // default
+      String contact = ''; // default
+
+      // Get email from user data if available
+      if (userData != null &&
+          userData['user'] != null &&
+          userData['user']['email'] != null) {
+        email = userData['user']['email'].toString();
+      }
+
+      // Get contact from address if available
+      if (_userAddress != null && _userAddress!['phone'] != null) {
+        contact = _userAddress!['phone'].toString();
+      }
+
       dynamic response;
       if (widget.isBuyNow) {
         final product = widget.cartProducts[0];
@@ -124,7 +148,6 @@ class _OrderListState extends State<OrderList> {
           paymentMethod: 'Razorpay',
         );
       } else {
-        // Handle cart checkout
         final cartProductIds =
             widget.cartProducts
                 .map((product) => product['_id'].toString())
@@ -145,16 +168,12 @@ class _OrderListState extends State<OrderList> {
 
       debugPrint('API Response: $response');
 
-      // 1. Handle Buy Now response (orderId at root level)
       if (widget.isBuyNow) {
         _orderId = response['orderId']?.toString();
-      }
-      // 2. Handle Cart response (order ID under 'order._id')
-      else {
+      } else {
         _orderId = response['order']?['_id']?.toString();
       }
 
-      // 3. Final fallback if still null
       if (_orderId == null) {
         debugPrint(
           'Order ID not found in response. Available keys: ${response.keys}',
@@ -162,22 +181,20 @@ class _OrderListState extends State<OrderList> {
         throw Exception('Failed to extract order ID from response');
       }
 
-      // DEBUG: Confirm extracted ID
       debugPrint('Extracted Order ID: $_orderId');
-      // Also make sure razorpayOrder is properly extracted
       final razorpayOrder = response['razorpayOrder'];
       if (razorpayOrder == null) {
         throw Exception('Razorpay order data not found in response');
       }
 
       final options = {
-        'key': 'rzp_test_XSMd17B3zbeJ02',
+        'key': ApiConstants.razorPayId,
         'amount': razorpayOrder['amount'].toString(),
         'currency': razorpayOrder['currency'],
         'name': 'Omeg Bazaar',
         'description': 'Order Payment',
         'order_id': razorpayOrder['id'],
-        'prefill': {'contact': '8888888888', 'email': 'customer@example.com'},
+        'prefill': {'contact': contact, 'email': email},
         'theme': {
           'color':
               '#${AppColour.primaryColor.value.toRadixString(16).substring(2)}',
@@ -251,7 +268,7 @@ class _OrderListState extends State<OrderList> {
 
       if (verified) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Payment verification successful')),
+          const SnackBar(content: Text('Order placed and verify successfully')),
         );
         Navigator.pushReplacementNamed(context, '/home');
       } else {

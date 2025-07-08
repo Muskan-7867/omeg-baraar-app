@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:omeg_bazaar/utills/api.constants.dart';
+import 'package:omeg_bazaar/utills/api_constants.dart';
 
 class ForgotPassword {
   static const String baseurl =  ApiConstants.baseUrl;
