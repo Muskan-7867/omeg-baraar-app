@@ -8,7 +8,7 @@ class LogOutSheetCart extends StatelessWidget {
   Future<void> _logOut(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('authToken');
+      await prefs.clear();
 
       Navigator.of(
         context,

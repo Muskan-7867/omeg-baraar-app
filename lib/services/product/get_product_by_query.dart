@@ -6,7 +6,7 @@ class GetFilteredProducts {
   static const String baseUrl = ApiConstants.baseUrl;
 
   Future<List<Map<String, dynamic>>> fetchFilteredProducts({
-    int limit = 15,
+    
     int page = 1,
     String? category,
     String? search,
@@ -15,7 +15,7 @@ class GetFilteredProducts {
   }) async {
     final uri = Uri.parse('$baseUrl/product/getquery').replace(
       queryParameters: {
-        'limit': limit.toString(),
+    
         'page': page.toString(),
         'minPrice': minPrice.toString(),
         'maxPrice': maxPrice.toString(),

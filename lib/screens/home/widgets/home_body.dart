@@ -52,7 +52,6 @@ class _HomeBodyState extends State<HomeBody> {
       } else {
         final data = await _productsService.fetchFilteredProducts(
           search: query,
-          limit: 10,
         );
         setState(() {
           displayedProducts = data;
@@ -93,7 +92,7 @@ class _HomeBodyState extends State<HomeBody> {
 
   Future<void> fetchAllProducts() async {
     try {
-      final data = await _productsService.fetchFilteredProducts(limit: 10);
+      final data = await _productsService.fetchFilteredProducts();
       setState(() {
         displayedProducts = data;
         isProductsLoading = false;
@@ -117,7 +116,6 @@ class _HomeBodyState extends State<HomeBody> {
     try {
       final data = await _productsService.fetchFilteredProducts(
         category: categoryId,
-        limit: 10,
       );
       setState(() => displayedProducts = data);
     } catch (e) {
