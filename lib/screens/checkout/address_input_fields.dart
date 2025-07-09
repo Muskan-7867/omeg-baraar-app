@@ -94,7 +94,7 @@ class AddressInputFields extends StatelessWidget {
           controller: addressController,
           labelText: 'Address Line 1',
           hintText: 'Enter your primary address',
-          maxLines: 2,
+
           borderColor: AppColour.primaryColor,
         ),
         const SizedBox(height: 16),
@@ -102,7 +102,7 @@ class AddressInputFields extends StatelessWidget {
           controller: address1Controller,
           labelText: 'Address Line 2 (Optional)',
           hintText: 'Enter additional address information',
-          maxLines: 2,
+
           isRequired: false,
           borderColor: AppColour.primaryColor,
         ),

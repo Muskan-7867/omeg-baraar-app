@@ -24,9 +24,29 @@ class UserService {
 
       if (response.statusCode == 200) {
         await _saveUserData(data);
+
+        // Filter orders to only include:
+        // 1. COD orders (paymentMethod is 'cash_on_delivery') - always show
+        // 2. Online payment/Razorpay orders that are paid (isPaid: true)
         if (data['user']['order'] != null) {
-          await _saveUserOrders(data['user']['order']);
+          final List<dynamic> allOrders = data['user']['order'];
+          final List<dynamic> validOrders =
+              allOrders.where((order) {
+                final paymentMethod =
+                    order['paymentMethod']?.toString().toLowerCase();
+                final isPaid = order['isPaid'] ?? false;
+
+                // Include order if:
+                // - It's COD, OR
+                // - It's online payment/Razorpay AND isPaid is true
+                return paymentMethod == 'cash_on_delivery' ||
+                    (['online_payment', 'razorpay'].contains(paymentMethod) &&
+                        isPaid);
+              }).toList();
+
+          await _saveUserOrders(validOrders);
         }
+        debugPrint('from user api $data');
         return data;
       } else {
         throw Exception('Failed to load user data');
