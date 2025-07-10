@@ -60,22 +60,26 @@ class _SingleProductState extends State<SingleProduct> {
     });
   }
 
-  Future<void> toggleCart() async {
+  Future<void> toggleCart({bool suppressSnackbar = false}) async {
     final cart = Provider.of<CartProvider>(context, listen: false);
     final prodId = product!['_id'].toString();
 
     if (isInCart) {
       await CartHelper.removeFromCart(prodId);
       cart.decrement();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Removed from Cart')));
+      if (!suppressSnackbar) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Removed from Cart')));
+      }
     } else {
       cart.increment();
       await CartHelper.addToCart(prodId);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Added to Cart')));
+      if (!suppressSnackbar) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Added to Cart')));
+      }
     }
 
     setState(() {
@@ -101,7 +105,7 @@ class _SingleProductState extends State<SingleProduct> {
 
     // First add to cart if not already there
     if (!isInCart) {
-      toggleCart().then((_) {
+      toggleCart(suppressSnackbar: true).then((_) {
         if (mounted) {
           _navigateToCheckout(singleProductList, quantities);
         }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/checkout/order_list.dart';
+import 'package:omeg_bazaar/services/user/fetch_user_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -29,7 +30,7 @@ class _CheckoutState extends State<Checkout> {
   void initState() {
     super.initState();
     _calculateTotals();
-    _loadAddress();
+    _loadUserAddress();
   }
 
   void _calculateTotals() {
@@ -50,22 +51,57 @@ class _CheckoutState extends State<Checkout> {
     grandTotal = totalPrice + deliveryCharges;
   }
 
-  Future<void> _loadAddress() async {
+  Future<void> _loadUserAddress() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final addressJson = prefs.getString('useraddress');
 
-      if (addressJson != null) {
-        setState(() {
-          savedAddress = jsonDecode(addressJson);
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
+      // First try to get from user data
+      final userDataString = prefs.getString(UserService.userDataKey);
+      if (userDataString != null) {
+        final userData = jsonDecode(userDataString);
+        final addressData = userData['user']['address'];
+
+        if (addressData != null && addressData is Map<String, dynamic>) {
+          setState(() {
+            savedAddress = {
+              'name': userData['user']['username'],
+              'address': addressData['street'] ?? addressData['address'],
+              'address1': addressData['address1'] ?? '',
+              'city': addressData['city'],
+              'state': addressData['state'],
+              'pincode': addressData['pincode'].toString(),
+              'phone': addressData['phone'].toString(),
+            };
+            isLoading = false;
+          });
+          return;
+        }
       }
+
+      // If not found in user data, check the separate address storage
+      final addressJson = prefs.getString('useraddress');
+      if (addressJson != null) {
+        final addressData = jsonDecode(addressJson);
+        setState(() {
+          savedAddress = {
+            'address': addressData['street'] ?? addressData['address'],
+            'address1': addressData['address1'] ?? '',
+            'city': addressData['city'],
+            'state': addressData['state'],
+            'pincode': addressData['pincode'].toString(),
+            'phone': addressData['phone'].toString(),
+          };
+          isLoading = false;
+        });
+        return;
+      }
+
+      setState(() {
+        savedAddress = null;
+        isLoading = false;
+      });
     } catch (e) {
+      debugPrint('Error loading address: $e');
       setState(() {
         isLoading = false;
         errorMessage = 'Failed to load address';
@@ -81,20 +117,24 @@ class _CheckoutState extends State<Checkout> {
     if (errorMessage != null) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 26),
-        child: Text(errorMessage!, style: TextStyle(color: Colors.red)),
+        child: Text(errorMessage!, style: const TextStyle(color: Colors.red)),
       );
     }
 
     if (savedAddress == null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 26),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('No address saved. Please add an address.'),
-            TextButton(
+            const Text(
+              'No shipping address found',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            IconButton(
               onPressed: _navigateToAddressForm,
-              child: const Text('Add Address'),
+              icon: const Icon(Icons.edit),
             ),
           ],
         ),
@@ -105,20 +145,21 @@ class _CheckoutState extends State<Checkout> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Padding(
               padding: EdgeInsets.fromLTRB(14, 16, 0, 0),
               child: Icon(Icons.location_on, size: 42, color: Colors.grey),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                savedAddress!['type'] ?? 'Address',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  savedAddress!['type'] ?? 'Address',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -167,7 +208,7 @@ class _CheckoutState extends State<Checkout> {
       setState(() {
         isLoading = true;
       });
-      await _loadAddress();
+      await _loadUserAddress();
     }
   }
 
@@ -178,26 +219,16 @@ class _CheckoutState extends State<Checkout> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 26),
-                child: Text(
-                  'Shipping Address',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              IconButton(
-                onPressed: _navigateToAddressForm,
-                icon: const Icon(Icons.edit),
-              ),
-            ],
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+            child: Text(
+              'Shipping Address',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           _buildAddressSection(),
           const SizedBox(height: 20),
           const Divider(),
-          // Order list
           Expanded(
             child: OrderList(
               cartProducts: widget.cartProducts,

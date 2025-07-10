@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   static const baseUrl = ApiConstants.baseUrl;
-  static const _userDataKey = 'user_data';
+  static const userDataKey = 'user_data';
   static const _userOrdersKey = 'user_orders';
 
   static Future<Map<String, dynamic>> getUser(String token) async {
@@ -58,7 +58,7 @@ class UserService {
 
   static Future<void> _saveUserData(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_userDataKey, json.encode(userData));
+    await prefs.setString(userDataKey, json.encode(userData));
   }
 
   static Future<void> _saveUserOrders(List<dynamic> orders) async {
@@ -77,7 +77,7 @@ class UserService {
 
   static Future<void> clearUserData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_userDataKey);
+    await prefs.remove(userDataKey);
     await prefs.remove(_userOrdersKey);
   }
 }

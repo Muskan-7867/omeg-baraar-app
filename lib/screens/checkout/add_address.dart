@@ -43,7 +43,6 @@ class _AddressFormState extends State<AddressForm> {
   if (_formKey.currentState!.validate()) {
     setState(() => _isLoading = true);
 
-    // Create address data map
     final addressData = {
       'phone': _phoneController.text,
       'street': _streetController.text,
@@ -52,11 +51,11 @@ class _AddressFormState extends State<AddressForm> {
       'pincode': _pincodeController.text,
       'country': _countryController.text,
       'address': _addressController.text,
-      'address1': _address1Controller.text,
+      'address1': _address1Controller.text.isNotEmpty ? _address1Controller.text : '',
+      'name': 'User', // Add a default name if needed
     };
 
     try {
-      // First try to send to API
       final response = await AddAddressApi.addAddress(
         phone: _phoneController.text,
         street: _streetController.text,
@@ -69,45 +68,45 @@ class _AddressFormState extends State<AddressForm> {
       );
 
       if (!mounted) return;
-      setState(() => _isLoading = false);
-
+      
       if (response['success'] == true) {
-        // Add the ID to the address data if received from API
-        if (response['data'] != null && response['data']['_id'] != null) {
-          addressData['_id'] = response['data']['_id'];
-        }
+        // Update the address in local storage with API response data if available
+        final updatedAddress = {
+          ...addressData,
+          '_id': response['data']?['_id'],
+        };
+        await _saveAddressToLocalStorage(updatedAddress);
         
-        // Save to local storage with ID
-        await _saveAddressToLocalStorage(addressData);
-
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Address added successfully')),
         );
-        Navigator.pop(context, true); // Return success to previous screen
+        Navigator.pop(context, true);
       } else {
-        // Save without ID if API failed
+        // Fallback to local storage if API fails
         await _saveAddressToLocalStorage(addressData);
-        
-        String errorMessage = response['message'] ?? 'Failed to save address';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$errorMessage - Address saved locally'),
+            content: Text(response['message'] ?? 'Address saved locally'),
             backgroundColor: Colors.orange,
           ),
         );
+        Navigator.pop(context, true);
       }
     } catch (e) {
-      // Save without ID if network error
+      // Save locally if network error
       await _saveAddressToLocalStorage(addressData);
-      
       if (!mounted) return;
-      setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Network error - Address saved locally'),
           backgroundColor: Colors.orange,
         ),
       );
+      Navigator.pop(context, true);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 }
