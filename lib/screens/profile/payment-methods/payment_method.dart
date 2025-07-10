@@ -28,28 +28,19 @@ class PaymentMethod extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start, // Align children left
             children: [
               const Text(
-                'Credit & Debit Card',
+                'Razorpay Payment Options',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
+              PaymentMethodDropdown(icon: Icons.payments, title: 'UPI'),
+              PaymentMethodDropdown(icon: Icons.credit_card, title: 'Cards'),
               PaymentMethodDropdown(
-                icon: Icons.credit_card,
-                title: 'Add New Card',
-                onTap: () {},
-              ),
-              const Text(
-                'More Payment Options',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                icon: Icons.payments_sharp,
+                title: 'Netbanking',
               ),
               PaymentMethodDropdown(
-                icon: Icons.payments,
-                title: 'Add New Card',
-                onTap: () {},
-              ),
-              PaymentMethodDropdown(
-                icon: Icons.account_circle,
-                title: 'Add New Card',
-                onTap: () {},
+                icon: Icons.account_balance,
+                title: 'Wallet',
               ),
             ],
           ),
