@@ -10,6 +10,7 @@ class OrderTrack extends StatefulWidget {
   final int quantity;
   final String status;
   final String expectedDeliveryDate;
+  final String paymentMethod;
 
   const OrderTrack({
     super.key,
@@ -20,6 +21,7 @@ class OrderTrack extends StatefulWidget {
     required this.quantity,
     required this.status,
     required this.expectedDeliveryDate,
+    required this.paymentMethod,
   });
 
   @override
@@ -88,6 +90,14 @@ class _OrderTrackState extends State<OrderTrack> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Payment Method:'),
+                    Text(widget.paymentMethod),
+                  ],
+                ),
               ],
             ),
           ),
@@ -100,12 +110,10 @@ class _OrderTrackState extends State<OrderTrack> {
             ),
           ),
           SizedBox(
-            height: 500,
+            height: 400,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: OrderTimeLine(
-                // Pass status to timeline if needed
-              ),
+              child: OrderTimeLine(status: widget.status),
             ),
           ),
         ],

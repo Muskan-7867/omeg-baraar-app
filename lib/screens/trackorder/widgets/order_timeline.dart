@@ -3,42 +3,61 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class OrderTimeLine extends StatelessWidget {
-  const OrderTimeLine({super.key});
+  final String status;
+
+  const OrderTimeLine({super.key, required this.status});
+
   @override
   Widget build(BuildContext context) {
+    // Convert status to lowercase for case-insensitive comparison
+    final currentStatus = status.toLowerCase();
+
+    // Determine which steps are completed based on current status
+    final isOrderPlacedDone = true; // Always true since order exists
+    final isInProgressDone = currentStatus != 'pending';
+    final isShippedDone =
+        currentStatus == 'shipped' || currentStatus == 'delivered';
+    final isDeliveredDone = currentStatus == 'delivered';
+
     return ListView(
       children: [
-        //buildtile is a method taht builds the timeline tile (steps) Each Tile	Shows: status icon, title, subtitle, colored line
         buildTile(
           isFirst: true,
           isLast: false,
-          isDone: true,
+          isDone: isOrderPlacedDone,
           title: "Order Placed",
-          subtitle: "12:00 AM",
+          subtitle: "Your order has been placed",
           icon: Icons.check_circle,
         ),
         buildTile(
           isFirst: false,
           isLast: false,
-          isDone: true,
+          isDone: isInProgressDone,
           title: 'In Progress',
-          subtitle: '23 Aug 2023, 03:54 PM',
+          subtitle:
+              isInProgressDone
+                  ? 'Your order is being processed'
+                  : 'Waiting to process your order',
           icon: Icons.inventory,
         ),
         buildTile(
           isFirst: false,
           isLast: false,
-          isDone: false,
+          isDone: isShippedDone,
           title: 'Shipped',
-          subtitle: 'Expected 02 Sep 2023',
+          subtitle:
+              isShippedDone ? 'Your order has been shipped' : 'Not yet shipped',
           icon: Icons.local_shipping,
         ),
         buildTile(
           isFirst: false,
           isLast: true,
-          isDone: false,
+          isDone: isDeliveredDone,
           title: 'Delivered',
-          subtitle: 'Not yet delivered',
+          subtitle:
+              isDeliveredDone
+                  ? 'Your order has been delivered'
+                  : 'Not yet delivered',
           icon: Icons.inventory_2,
         ),
       ],
@@ -78,12 +97,19 @@ class OrderTimeLine extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isDone ? Colors.black : Colors.grey.shade600,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
+                    style: TextStyle(
+                      color:
+                          isDone ? Colors.grey.shade700 : Colors.grey.shade500,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),

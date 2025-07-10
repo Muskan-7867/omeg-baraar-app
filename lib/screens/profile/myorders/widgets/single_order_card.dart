@@ -10,6 +10,7 @@ class OrderProductCard extends StatelessWidget {
   final int quantity;
   final double price;
   final  String expectedDeliveryDate;
+  final String paymentMethod;
 
   const OrderProductCard({
     super.key,
@@ -20,6 +21,8 @@ class OrderProductCard extends StatelessWidget {
     required this.quantity,
     required this.price,
     required this.expectedDeliveryDate,
+    required this.paymentMethod,
+
   });
 
   @override
@@ -92,6 +95,7 @@ class OrderProductCard extends StatelessWidget {
                           quantity: quantity,
                           status: status,
                           expectedDeliveryDate: expectedDeliveryDate,
+                          paymentMethod: paymentMethod,
                         ),
                   ),
                 );

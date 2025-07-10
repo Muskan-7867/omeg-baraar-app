@@ -103,7 +103,7 @@ class _OrderTapBarState extends State<OrderTapBar>
    final expectedDeliveryDate = order['expectedDeliveryDate'] != null 
     ? DateTime.parse(order['expectedDeliveryDate'].toString()).toLocal().toString().split(' ')[0]
     : '';
-
+      final paymentMethod = order['paymentMethod']?.toString() ?? 'N/A';
         // Get first product ID for preview
         String? firstProductId;
         dynamic productDetails;
@@ -128,6 +128,7 @@ class _OrderTapBarState extends State<OrderTapBar>
           quantity: itemCount,
           price: price,
           expectedDeliveryDate: expectedDeliveryDate,
+          paymentMethod: paymentMethod,
         );
       },
     );
