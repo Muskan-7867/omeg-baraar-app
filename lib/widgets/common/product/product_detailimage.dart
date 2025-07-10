@@ -10,14 +10,21 @@ class ProductDetailImage extends StatefulWidget {
 
 class _ProductDetailImageState extends State<ProductDetailImage> {
   int selectedIndex = 0;
+  final PageController _pagecontroller = PageController();
+
+  @override
+  void dispose() {
+    _pagecontroller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool multipleimages = widget.images.length > 1;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Container(
         decoration: BoxDecoration(
-          // color: Colors.red[100],
           image: DecorationImage(
             fit: BoxFit.contain,
             image: NetworkImage(widget.images[selectedIndex]),
@@ -27,17 +34,40 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
         // width: double.infinity,
         child: Stack(
           children: [
+            PageView.builder(
+              controller: _pagecontroller,
+              itemCount: widget.images.length,
+              onPageChanged: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: NetworkImage(widget.images[index]),
+                    ),
+                  ),
+                );
+              },
+            ),
             if (multipleimages)
               Positioned(
                 bottom: 25,
                 left: 0,
                 right: 0,
+
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 14,
+                  ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.6), // 80% opacity
-
+                      // color: Colors.white,
+                      border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     // width: double.infinity,
@@ -55,6 +85,11 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
                               setState(() {
                                 selectedIndex = index;
                               });
+                              _pagecontroller.animateToPage(
+                                index,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
                             },
 
                             child: Container(

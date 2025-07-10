@@ -15,11 +15,19 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   bool inCart = false;
+  int _currentImageIndex = 0;
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
     checkCartStatus();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   Future<void> checkCartStatus() async {
@@ -54,13 +62,19 @@ class _ProductCardState extends State<ProductCard> {
     });
   }
 
+  List<String> getImageUrls() {
+    if (widget.product['images'] == null || widget.product['images'].isEmpty) {
+      return ['https://example.com/default.jpg'];
+    }
+    return widget.product['images']
+        .map<String>((img) => img['url'] as String)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String imageUrl =
-        (widget.product['images'] != null &&
-                widget.product['images'].isNotEmpty)
-            ? widget.product['images'][0]['url']
-            : 'https://example.com/default.jpg';
+    final imageUrls = getImageUrls();
+    final bool multipleImages = imageUrls.length > 1;
 
     return Card(
       color: Colors.transparent,
@@ -78,15 +92,31 @@ class _ProductCardState extends State<ProductCard> {
             },
             child: AspectRatio(
               aspectRatio: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.contain,
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    itemCount: imageUrls.length,
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentImageIndex = index;
+                      });
+                    },
+
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(imageUrls[index]),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
             ),
           ),
