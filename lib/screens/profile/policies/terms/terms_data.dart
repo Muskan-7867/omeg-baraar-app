@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/profile/policies/privacy/widgets/bullet_list.dart';
-import 'package:omegbazaar/screens/profile/policies/privacy/widgets/paragraph.dart';
-import 'package:omegbazaar/screens/profile/policies/privacy/widgets/section_title.dart';
+import 'package:omeg_bazaar/screens/profile/policies/privacy/widgets/bullet_list.dart';
+import 'package:omeg_bazaar/screens/profile/policies/privacy/widgets/paragraph.dart';
+import 'package:omeg_bazaar/screens/profile/policies/privacy/widgets/section_title.dart';
 
 class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions({super.key});

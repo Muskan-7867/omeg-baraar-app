@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class ImageSection extends StatefulWidget {
   const ImageSection({super.key});

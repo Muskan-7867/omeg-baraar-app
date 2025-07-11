@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/widgets/common/product/product_description.dart';
+import 'package:omeg_bazaar/widgets/common/product/product_description.dart';
 
 class ProductInfoScreen extends StatefulWidget {
   final Map<String, dynamic> product;

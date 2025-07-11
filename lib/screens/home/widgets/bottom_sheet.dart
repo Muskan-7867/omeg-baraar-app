@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/widgets/common/cart/cart_summary.dart';
+import 'package:omeg_bazaar/widgets/common/cart/cart_summary.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomSheetCart extends StatelessWidget {

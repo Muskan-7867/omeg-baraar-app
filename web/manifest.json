@@ -1,6 +1,6 @@
 {
-  "name": "omegbazaar",
-  "short_name": "omegbazaar",
+  "name": "omeg_bazaar",
+  "short_name": "omeg_bazaar",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

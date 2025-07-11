@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/provider/cart_provider.dart';
-import 'package:omegbazaar/screens/cart/cartpage.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/provider/cart_provider.dart';
+import 'package:omeg_bazaar/screens/cart/cartpage.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

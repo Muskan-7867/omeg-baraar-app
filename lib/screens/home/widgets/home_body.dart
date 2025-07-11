@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/home/widgets/banner.dart';
-import 'package:omegbazaar/screens/home/widgets/home_categories.dart';
-import 'package:omegbazaar/screens/home/widgets/search_bar.dart';
-import 'package:omegbazaar/services/product/get_category_api.dart';
-import 'package:omegbazaar/services/product/get_product_by_query.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
-import 'package:omegbazaar/widgets/common/loaders/product_card_shimmer.dart';
-import 'package:omegbazaar/widgets/common/product/product_card.dart';
-import 'package:omegbazaar/widgets/common/rounded_button.dart';
-import 'package:omegbazaar/widgets/common/title.dart';
+import 'package:omeg_bazaar/screens/home/widgets/banner.dart';
+import 'package:omeg_bazaar/screens/home/widgets/home_categories.dart';
+import 'package:omeg_bazaar/screens/home/widgets/search_bar.dart';
+import 'package:omeg_bazaar/services/product/get_category_api.dart';
+import 'package:omeg_bazaar/services/product/get_product_by_query.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
+import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
+import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
+import 'package:omeg_bazaar/widgets/common/title.dart';
 
 class HomeBody extends StatefulWidget {
   final VoidCallback onSeeAllPressed;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/cart/widgets/single_cart_product.dart';
+import 'package:omeg_bazaar/screens/cart/widgets/single_cart_product.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});

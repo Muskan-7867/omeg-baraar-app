@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/provider/cart_provider.dart';
-import 'package:omegbazaar/screens/checkout/checkout.dart';
-import 'package:omegbazaar/services/cart/cart_helper.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
-import 'package:omegbazaar/widgets/common/product/product_detailimage.dart';
-import 'package:omegbazaar/screens/product/widget/product_info_screen.dart';
+import 'package:omeg_bazaar/provider/cart_provider.dart';
+import 'package:omeg_bazaar/screens/checkout/checkout.dart';
+import 'package:omeg_bazaar/services/cart/cart_helper.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/widgets/common/product/product_detailimage.dart';
+import 'package:omeg_bazaar/screens/product/widget/product_info_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

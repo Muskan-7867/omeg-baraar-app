@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/profile/myorders/widgets/orders_tab_bar.dart';
-import 'package:omegbazaar/screens/profile/user_profile.dart';
-import 'package:omegbazaar/screens/profile/widgets/services/profile_data_service.dart';
+import 'package:omeg_bazaar/screens/profile/myorders/widgets/orders_tab_bar.dart';
+import 'package:omeg_bazaar/screens/profile/user_profile.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/services/profile_data_service.dart';
 
 class MyOrders extends StatefulWidget {
   const MyOrders({super.key});

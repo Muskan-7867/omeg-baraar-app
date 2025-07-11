@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/product/widget/products_list.dart';
-import 'package:omegbazaar/services/product/get_product_by_query.dart';
-import 'package:omegbazaar/screens/product/widget/filter_bar.dart';
+import 'package:omeg_bazaar/screens/product/widget/products_list.dart';
+import 'package:omeg_bazaar/services/product/get_product_by_query.dart';
+import 'package:omeg_bazaar/screens/product/widget/filter_bar.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});

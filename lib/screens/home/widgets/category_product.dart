@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/services/product/get_category_api.dart';
-import 'package:omegbazaar/services/product/get_product_by_category.dart';
-import 'package:omegbazaar/widgets/common/category/category_btn.dart';
-import 'package:omegbazaar/widgets/common/loaders/category_shimmer_loader.dart';
-import 'package:omegbazaar/screens/home/widgets/products.dart';
+import 'package:omeg_bazaar/services/product/get_category_api.dart';
+import 'package:omeg_bazaar/services/product/get_product_by_category.dart';
+import 'package:omeg_bazaar/widgets/common/category/category_btn.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/category_shimmer_loader.dart';
+import 'package:omeg_bazaar/screens/home/widgets/products.dart';
 
 class CategoryProduct extends StatefulWidget {
   const CategoryProduct({super.key});

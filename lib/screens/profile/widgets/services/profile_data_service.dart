@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:omegbazaar/services/user/fetch_user_api.dart';
+import 'package:omeg_bazaar/services/user/fetch_user_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileDataService {

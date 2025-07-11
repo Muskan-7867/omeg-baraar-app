@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/services/product/get_products_api.dart';
-import 'package:omegbazaar/widgets/common/product/product_card.dart';
+import 'package:omeg_bazaar/services/product/get_products_api.dart';
+import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/profile/policies/cancellation/cancelation.dart';
-import 'package:omegbazaar/screens/profile/policies/contactus/contact_us.dart';
-import 'package:omegbazaar/screens/profile/policies/privacy/privacy_data.dart';
-import 'package:omegbazaar/screens/profile/policies/terms/terms_data.dart';
-import 'package:omegbazaar/screens/profile/user_profile.dart';
+import 'package:omeg_bazaar/screens/profile/policies/cancellation/cancelation.dart';
+import 'package:omeg_bazaar/screens/profile/policies/contactus/contact_us.dart';
+import 'package:omeg_bazaar/screens/profile/policies/privacy/privacy_data.dart';
+import 'package:omeg_bazaar/screens/profile/policies/terms/terms_data.dart';
+import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 
 class Policies extends StatefulWidget {
   const Policies({super.key});

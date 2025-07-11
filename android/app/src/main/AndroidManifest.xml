@@ -3,7 +3,7 @@
 
     <application
 
-        android:label="omegbazaar"
+        android:label="omeg_bazaar"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

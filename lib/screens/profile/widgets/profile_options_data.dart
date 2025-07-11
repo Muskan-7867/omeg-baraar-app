@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/profile/widgets/log_out_bottom_sheet.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/log_out_bottom_sheet.dart';
 
 List<Map<String, dynamic>> getProfileOptions(BuildContext context) {
   return [

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/checkout/summary_row.dart';
+import 'package:omeg_bazaar/screens/checkout/summary_row.dart';
 
 class OrderSummary extends StatelessWidget {
   final List<dynamic> cartProducts;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/home/widgets/home_body.dart';
-import 'package:omegbazaar/screens/product/products_page.dart';
-import 'package:omegbazaar/screens/profile/myorders/my_orders.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
-import 'package:omegbazaar/widgets/common/app_bar.dart';
+import 'package:omeg_bazaar/screens/home/widgets/home_body.dart';
+import 'package:omeg_bazaar/screens/product/products_page.dart';
+import 'package:omeg_bazaar/screens/profile/myorders/my_orders.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/widgets/common/app_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

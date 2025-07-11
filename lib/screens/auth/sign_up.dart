@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/auth/signup_form.dart';
-import 'package:omegbazaar/services/user/user_signup.dart';
-import 'package:omegbazaar/widgets/common/divider_signup.dart';
-import 'package:omegbazaar/widgets/common/gradient_btn.dart';
+import 'package:omeg_bazaar/screens/auth/signup_form.dart';
+import 'package:omeg_bazaar/services/user/user_signup.dart';
+import 'package:omeg_bazaar/widgets/common/divider_signup.dart';
+import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
 
 class UserSignUp extends StatefulWidget {
   const UserSignUp({super.key});

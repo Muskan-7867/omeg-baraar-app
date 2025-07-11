@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/checkout/text_fields.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/screens/checkout/text_fields.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class AddressInputFields extends StatelessWidget {
   final TextEditingController streetController;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/home/home.dart';
-import 'package:omegbazaar/screens/profile/widgets/profile_dropdowns.dart';
-import 'package:omegbazaar/screens/profile/widgets/profile_options.dart';
-import 'package:omegbazaar/screens/profile/widgets/profile_options_data.dart';
-import 'package:omegbazaar/screens/profile/widgets/services/profile_data_service.dart';
-import 'package:omegbazaar/screens/profile/widgets/user_info.dart';
+import 'package:omeg_bazaar/screens/home/home.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/profile_dropdowns.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/profile_options.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/profile_options_data.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/services/profile_data_service.dart';
+import 'package:omeg_bazaar/screens/profile/widgets/user_info.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

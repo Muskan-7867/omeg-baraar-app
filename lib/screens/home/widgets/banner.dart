@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class MyBanner extends StatefulWidget {
   const MyBanner({super.key});

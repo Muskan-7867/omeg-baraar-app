@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/provider/cart_provider.dart';
-import 'package:omegbazaar/screens/cart/widgets/checkout_btn.dart';
-import 'package:omegbazaar/screens/cart/widgets/slidable_part.dart';
-import 'package:omegbazaar/services/cart/cart_data_load.dart';
-import 'package:omegbazaar/widgets/common/loaders/single_product_shimmer.dart';
+import 'package:omeg_bazaar/provider/cart_provider.dart';
+import 'package:omeg_bazaar/screens/cart/widgets/checkout_btn.dart';
+import 'package:omeg_bazaar/screens/cart/widgets/slidable_part.dart';
+import 'package:omeg_bazaar/services/cart/cart_data_load.dart';
+import 'package:omeg_bazaar/widgets/common/loaders/single_product_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

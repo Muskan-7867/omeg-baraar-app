@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omegbazaar/screens/trackorder/order_track.dart';
-import 'package:omegbazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/screens/trackorder/order_track.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class OrderProductCard extends StatelessWidget {
   final String orderId;

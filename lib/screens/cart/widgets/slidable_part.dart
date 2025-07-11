@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:omegbazaar/screens/cart/widgets/single_cartprod_card.dart';
+import 'package:omeg_bazaar/screens/cart/widgets/single_cartprod_card.dart';
 
 class CartProductSlidableItem extends StatelessWidget {
   final Map<String, dynamic> product;
