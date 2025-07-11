@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/profile/policies/privacy/widgets/paragraph.dart';
+import 'package:omegbazaar/screens/profile/policies/privacy/widgets/paragraph.dart';
 
 class ContactUs extends StatelessWidget {
   const ContactUs({super.key});

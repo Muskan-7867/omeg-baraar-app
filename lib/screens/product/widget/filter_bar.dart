@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/product/widget/category_section.dart';
-import 'package:omeg_bazaar/screens/product/widget/filter_action_btn.dart';
-import 'package:omeg_bazaar/screens/product/widget/price_slider.dart';
-import 'package:omeg_bazaar/services/product/get_category_api.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omegbazaar/screens/product/widget/category_section.dart';
+import 'package:omegbazaar/screens/product/widget/filter_action_btn.dart';
+import 'package:omegbazaar/screens/product/widget/price_slider.dart';
+import 'package:omegbazaar/services/product/get_category_api.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
 
 class FilterBar extends StatefulWidget {
   final Function(Map<String, dynamic>) onApplyFilters;

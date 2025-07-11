@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:omeg_bazaar/screens/cart/widgets/single_cartprod_card.dart';
+import 'package:omegbazaar/screens/cart/widgets/single_cartprod_card.dart';
 
 class CartProductSlidableItem extends StatelessWidget {
   final Map<String, dynamic> product;
@@ -26,9 +26,7 @@ class CartProductSlidableItem extends StatelessWidget {
       key: ValueKey(product['id']),
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
-        dismissible: DismissiblePane(
-          onDismissed: onRemove,
-        ),
+        dismissible: DismissiblePane(onDismissed: onRemove),
         children: [
           SlidableAction(
             onPressed: (_) => onRemove(),

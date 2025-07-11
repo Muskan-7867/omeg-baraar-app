@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/home/widgets/bottom_sheet.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omegbazaar/screens/home/widgets/bottom_sheet.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
 
 class CheckoutBtn extends StatelessWidget {
   final List<Map<String, dynamic>> cartProducts;
@@ -26,10 +26,11 @@ class CheckoutBtn extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               context: context,
-              builder: (context) => BottomSheetCart(
-                cartProducts: cartProducts,
-                quantities: quantities,
-              ),
+              builder:
+                  (context) => BottomSheetCart(
+                    cartProducts: cartProducts,
+                    quantities: quantities,
+                  ),
             );
           },
           child: const Text(

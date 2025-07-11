@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/services/user/add_address_api.dart';
+import 'package:omegbazaar/services/user/add_address_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'address_input_fields.dart';
 

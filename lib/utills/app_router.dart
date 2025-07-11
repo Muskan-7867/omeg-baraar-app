@@ -1,20 +1,20 @@
 import 'package:flutter/widgets.dart';
-import 'package:omeg_bazaar/screens/auth/forget_password.dart';
-import 'package:omeg_bazaar/screens/auth/sign_in.dart';
-import 'package:omeg_bazaar/screens/auth/sign_up.dart';
-import 'package:omeg_bazaar/screens/auth/verify.dart';
-import 'package:omeg_bazaar/screens/checkout/add_address.dart';
-import 'package:omeg_bazaar/screens/home/home.dart';
-import 'package:omeg_bazaar/screens/intro/intro.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/my_orders.dart';
-import 'package:omeg_bazaar/screens/profile/payment-methods/payment_method.dart';
-import 'package:omeg_bazaar/screens/product/products_page.dart';
-import 'package:omeg_bazaar/screens/profile/policies/policies.dart';
+import 'package:omegbazaar/screens/auth/forget_password.dart';
+import 'package:omegbazaar/screens/auth/sign_in.dart';
+import 'package:omegbazaar/screens/auth/sign_up.dart';
+import 'package:omegbazaar/screens/auth/verify.dart';
+import 'package:omegbazaar/screens/checkout/add_address.dart';
+import 'package:omegbazaar/screens/home/home.dart';
+import 'package:omegbazaar/screens/intro/intro.dart';
+import 'package:omegbazaar/screens/profile/myorders/my_orders.dart';
+import 'package:omegbazaar/screens/profile/payment-methods/payment_method.dart';
+import 'package:omegbazaar/screens/product/products_page.dart';
+import 'package:omegbazaar/screens/profile/policies/policies.dart';
 
-import 'package:omeg_bazaar/screens/profile/user_profile.dart';
-import 'package:omeg_bazaar/screens/profile/settings/settings.dart';
-import 'package:omeg_bazaar/screens/singleproduct/single_product_screen.dart';
-import 'package:omeg_bazaar/screens/splash_screen.dart';
+import 'package:omegbazaar/screens/profile/user_profile.dart';
+import 'package:omegbazaar/screens/profile/settings/settings.dart';
+import 'package:omegbazaar/screens/singleproduct/single_product_screen.dart';
+import 'package:omegbazaar/screens/splash_screen.dart';
 
 class AppRouter {
   static const String splash = '/';

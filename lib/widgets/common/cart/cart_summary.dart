@@ -1,8 +1,8 @@
 // cart_summary.dart
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/checkout/checkout.dart';
-import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omegbazaar/screens/checkout/checkout.dart';
+import 'package:omegbazaar/services/order/cart_products_order_api.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
 
 class CartSummary extends StatelessWidget {
   final List<Map<String, dynamic>> cartProducts;

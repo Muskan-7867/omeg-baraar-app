@@ -1,4 +1,4 @@
-# omeg_bazaar
+# omegbazaar
 
 A new Flutter project.
 

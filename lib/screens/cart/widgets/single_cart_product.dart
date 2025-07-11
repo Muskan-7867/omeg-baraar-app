@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/provider/cart_provider.dart';
-import 'package:omeg_bazaar/screens/cart/widgets/checkout_btn.dart';
-import 'package:omeg_bazaar/screens/cart/widgets/slidable_part.dart';
-import 'package:omeg_bazaar/services/cart/cart_data_load.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/single_product_shimmer.dart';
+import 'package:omegbazaar/provider/cart_provider.dart';
+import 'package:omegbazaar/screens/cart/widgets/checkout_btn.dart';
+import 'package:omegbazaar/screens/cart/widgets/slidable_part.dart';
+import 'package:omegbazaar/services/cart/cart_data_load.dart';
+import 'package:omegbazaar/widgets/common/loaders/single_product_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +24,7 @@ class _SingleCartProductState extends State<SingleCartProduct> {
   @override
   void initState() {
     super.initState();
-     WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       // Initialize the cart count when the page loads
       Provider.of<CartProvider>(context, listen: false).loadCartCount();
     });
@@ -50,7 +50,7 @@ class _SingleCartProductState extends State<SingleCartProduct> {
   void increment(int index) {
     setState(() {
       quantities[index]++;
-        _saveQuantity(index, quantities[index]);
+      _saveQuantity(index, quantities[index]);
     });
   }
 
@@ -58,18 +58,21 @@ class _SingleCartProductState extends State<SingleCartProduct> {
     if (quantities[index] > 1) {
       setState(() {
         quantities[index]--;
-         _saveQuantity(index, quantities[index]);
+        _saveQuantity(index, quantities[index]);
       });
     }
   }
-    Future<void> _saveQuantity(int index, int newQuantity) async {
+
+  Future<void> _saveQuantity(int index, int newQuantity) async {
     final prodId = cartProducts[index]['id'].toString();
     final prefs = await SharedPreferences.getInstance();
     final quantitiesMap = Map<String, int>.from(
-        prefs.getString('cartQuantities') != null
-            ? Map<String, int>.from(
-                jsonDecode(prefs.getString('cartQuantities')!))
-            : {});
+      prefs.getString('cartQuantities') != null
+          ? Map<String, int>.from(
+            jsonDecode(prefs.getString('cartQuantities')!),
+          )
+          : {},
+    );
 
     quantitiesMap[prodId] = newQuantity;
     await prefs.setString('cartQuantities', jsonEncode(quantitiesMap));
@@ -83,10 +86,12 @@ class _SingleCartProductState extends State<SingleCartProduct> {
     await prefs.setStringList('cartProdIds', ids);
 
     final quantitiesMap = Map<String, int>.from(
-        prefs.getString('cartQuantities') != null
-            ? Map<String, int>.from(
-                jsonDecode(prefs.getString('cartQuantities')!))
-            : {});
+      prefs.getString('cartQuantities') != null
+          ? Map<String, int>.from(
+            jsonDecode(prefs.getString('cartQuantities')!),
+          )
+          : {},
+    );
     quantitiesMap.remove(prodId);
     await prefs.setString('cartQuantities', jsonEncode(quantitiesMap));
     Provider.of<CartProvider>(context, listen: false).decrement();

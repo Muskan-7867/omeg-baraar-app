@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/widgets/common/category/category_btn.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/category_shimmer_loader.dart';
+import 'package:omegbazaar/widgets/common/category/category_btn.dart';
+import 'package:omegbazaar/widgets/common/loaders/category_shimmer_loader.dart';
 
 class CategorySection extends StatefulWidget {
   final String? selectedCategoryId;

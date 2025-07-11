@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/provider/cart_provider.dart';
-import 'package:omeg_bazaar/utills/app_router.dart';
+import 'package:omegbazaar/provider/cart_provider.dart';
+import 'package:omegbazaar/utills/app_router.dart';
 import 'package:provider/provider.dart';
 
 void main() {

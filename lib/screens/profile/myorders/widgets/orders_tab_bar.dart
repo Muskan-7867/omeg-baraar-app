@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/widgets/single_order_card.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
-import 'package:omeg_bazaar/services/order/get_product_by_id.dart';
+import 'package:omegbazaar/screens/profile/myorders/widgets/single_order_card.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
+import 'package:omegbazaar/services/order/get_product_by_id.dart';
 
 class OrderTapBar extends StatefulWidget {
   final List<dynamic> userOrders;

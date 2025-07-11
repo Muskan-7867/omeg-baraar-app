@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/home/widgets/bottom_sheet.dart';
-import 'package:omeg_bazaar/screens/cart/widgets/cart_btn.dart';
+import 'package:omegbazaar/screens/home/widgets/bottom_sheet.dart';
+import 'package:omegbazaar/screens/cart/widgets/cart_btn.dart';
 
 class SingleCartProdCard extends StatelessWidget {
   final Map<String, dynamic> product;

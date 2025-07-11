@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
 
 class OrderDetails extends StatefulWidget {
   final List<Map<String, dynamic>> orderItems;

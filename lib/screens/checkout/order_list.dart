@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/checkout/order_list_data.dart';
-import 'package:omeg_bazaar/screens/checkout/order_summary.dart';
-import 'package:omeg_bazaar/services/order/buy_now_product_api.dart';
-import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
-import 'package:omeg_bazaar/utills/api_constants.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omegbazaar/screens/checkout/order_list_data.dart';
+import 'package:omegbazaar/screens/checkout/order_summary.dart';
+import 'package:omegbazaar/services/order/buy_now_product_api.dart';
+import 'package:omegbazaar/services/order/cart_products_order_api.dart';
+import 'package:omegbazaar/utills/api_constants.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

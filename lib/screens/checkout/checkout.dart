@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/checkout/order_list.dart';
-import 'package:omeg_bazaar/services/user/fetch_user_api.dart';
+import 'package:omegbazaar/screens/checkout/order_list.dart';
+import 'package:omegbazaar/services/user/fetch_user_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 

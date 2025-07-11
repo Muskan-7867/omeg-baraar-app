@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
-import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
+import 'package:omegbazaar/widgets/common/loaders/product_card_shimmer.dart';
+import 'package:omegbazaar/widgets/common/product/product_card.dart';
 
 class ProductList extends StatelessWidget {
   final List<Map<String, dynamic>> products;

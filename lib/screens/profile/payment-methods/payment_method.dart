@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/profile/payment-methods/method_dropdown.dart';
-import 'package:omeg_bazaar/screens/profile/user_profile.dart';
+import 'package:omegbazaar/screens/profile/payment-methods/method_dropdown.dart';
+import 'package:omegbazaar/screens/profile/user_profile.dart';
 
 class PaymentMethod extends StatelessWidget {
   const PaymentMethod({super.key});

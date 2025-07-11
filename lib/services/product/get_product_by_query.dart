@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:omeg_bazaar/utills/api_constants.dart';
+import 'package:omegbazaar/utills/api_constants.dart';
 
 class GetFilteredProducts {
   static const String baseUrl = ApiConstants.baseUrl;

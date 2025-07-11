@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/profile/myorders/widgets/order_details.dart';
-import 'package:omeg_bazaar/services/order/get_orders_by_id.dart';
-import 'package:omeg_bazaar/services/order/get_product_by_id.dart';
+import 'package:omegbazaar/screens/profile/myorders/widgets/order_details.dart';
+import 'package:omegbazaar/services/order/get_orders_by_id.dart';
+import 'package:omegbazaar/services/order/get_product_by_id.dart';
 
 class UserSingleOrder extends StatefulWidget {
   final dynamic order;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/trackorder/widgets/order_timeline.dart';
-import 'package:omeg_bazaar/screens/trackorder/widgets/tarck_order_card.dart';
+import 'package:omegbazaar/screens/trackorder/widgets/order_timeline.dart';
+import 'package:omegbazaar/screens/trackorder/widgets/tarck_order_card.dart';
 
 class OrderTrack extends StatefulWidget {
   final String orderId;

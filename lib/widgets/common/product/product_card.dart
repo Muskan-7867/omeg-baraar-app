@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/provider/cart_provider.dart';
-import 'package:omeg_bazaar/services/cart/cart_helper.dart';
-import 'package:omeg_bazaar/widgets/common/product/product_info_and_cartbtn.dart';
+import 'package:omegbazaar/provider/cart_provider.dart';
+import 'package:omegbazaar/services/cart/cart_helper.dart';
+import 'package:omegbazaar/widgets/common/product/product_info_and_cartbtn.dart';
 import 'package:provider/provider.dart';
 
 class ProductCard extends StatefulWidget {

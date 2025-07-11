@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
+import 'package:omegbazaar/widgets/common/gradient_btn.dart';
 
 class VerifyUser extends StatefulWidget {
   const VerifyUser({super.key});

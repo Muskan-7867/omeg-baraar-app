@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omeg_bazaar/screens/trackorder/order_track.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omegbazaar/screens/trackorder/order_track.dart';
+import 'package:omegbazaar/utills/app_colour.dart';
 
 class OrderProductCard extends StatelessWidget {
   final String orderId;
@@ -9,7 +9,7 @@ class OrderProductCard extends StatelessWidget {
   final String status;
   final int quantity;
   final double price;
-  final  String expectedDeliveryDate;
+  final String expectedDeliveryDate;
   final String paymentMethod;
 
   const OrderProductCard({
@@ -22,7 +22,6 @@ class OrderProductCard extends StatelessWidget {
     required this.price,
     required this.expectedDeliveryDate,
     required this.paymentMethod,
-
   });
 
   @override
@@ -88,7 +87,7 @@ class OrderProductCard extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => OrderTrack(
-                          orderId: orderId, 
+                          orderId: orderId,
                           productImage: imageUrl,
                           productTitle: title,
                           productPrice: price,
