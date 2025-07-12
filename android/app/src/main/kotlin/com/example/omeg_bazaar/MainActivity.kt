@@ -1,4 +1,4 @@
-package com.example.omeg_bazaar
+package com.omenterprises.omeg_bazaar
 
 import io.flutter.embedding.android.FlutterActivity
 
