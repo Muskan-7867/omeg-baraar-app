@@ -60,7 +60,7 @@ class _MyOrdersState extends State<MyOrders> {
 
           if (!snapshot.hasData ||
               snapshot.data!['userOrders'] == null ||
-              !(snapshot.data!['userOrders'] is List)) {
+              snapshot.data!['userOrders'] is! List) {
             return const Center(child: Text('No orders found'));
           }
 
