@@ -13,12 +13,14 @@ class OrderList extends StatefulWidget {
   final List<dynamic> cartProducts;
   final List<int> quantities;
   final bool isBuyNow;
+   final Map<String, dynamic>? selectedAddress;
 
   const OrderList({
     super.key,
     required this.cartProducts,
     required this.quantities,
     this.isBuyNow = false,
+    this.selectedAddress,
   });
 
   @override
@@ -85,26 +87,40 @@ class _OrderListState extends State<OrderList> {
     _razorpay.clear();
     super.dispose();
   }
+  
 
   Future<void> _createRazorpayOrder() async {
-    if (widget.cartProducts.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No products in cart')));
+     if (widget.cartProducts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No products in cart')));
       return;
     }
 
-    if (_userAddress == null || _userAddress!.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Invalid address format')));
+    // Use the selectedAddress if available, otherwise fall back to local storage
+    final addressToUse = widget.selectedAddress ?? _userAddress;
+    
+    if (addressToUse == null || addressToUse.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add a shipping address')));
       return;
     }
+
+    // Standardize the address format
+    final standardizedAddress = {
+      'phone': addressToUse['phoneNumber'] ?? addressToUse['phone'],
+      'street': addressToUse['street'] ?? '',
+      'city': addressToUse['city'],
+      'state': addressToUse['state'],
+      'pincode': addressToUse['postalCode'] ?? addressToUse['pincode'],
+      'country': addressToUse['country'],
+      'address': addressToUse['addressLine1'] ?? addressToUse['address'],
+      'address1': addressToUse['addressLine2'] ?? addressToUse['address1'],
+      '_id': addressToUse['_id'],
+    };
 
     if (_authToken == null && !widget.isBuyNow) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Authentication required')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Authentication required')));
       return;
     }
 
@@ -112,7 +128,6 @@ class _OrderListState extends State<OrderList> {
       _isLoading = true;
       _errorMessage = null;
     });
-
     try {
       // Get user data from shared preferences
       final prefs = await SharedPreferences.getInstance();
@@ -143,19 +158,18 @@ class _OrderListState extends State<OrderList> {
         final quantity = widget.quantities[0];
         response = await BuyNowProductApi.createRazorpayOrder(
           productId: product['_id'],
-          address: _userAddress,
+          address: standardizedAddress,
           quantity: quantity,
           paymentMethod: 'Razorpay',
         );
       } else {
-        final cartProductIds =
-            widget.cartProducts
-                .map((product) => product['_id'].toString())
-                .toList();
+        final cartProductIds = widget.cartProducts
+            .map((product) => product['_id'].toString())
+            .toList();
 
         response = await CartProductsOrderApi.createRazorPayOrderOfCart(
           cartProductIds: cartProductIds,
-          address: _userAddress,
+          address: standardizedAddress,
           quantities: widget.quantities,
           paymentMethod: 'Razorpay',
           token: _authToken,

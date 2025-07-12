@@ -39,20 +39,19 @@ class _AddressFormState extends State<AddressForm> {
     super.dispose();
   }
 
-  Future<void> _submitForm() async {
+ Future<void> _submitForm() async {
   if (_formKey.currentState!.validate()) {
     setState(() => _isLoading = true);
 
     final addressData = {
-      'phone': _phoneController.text,
-      'street': _streetController.text,
+      'phoneNumber': _phoneController.text,
+      'addressLine1': _addressController.text,
+      'addressLine2': _address1Controller.text.isNotEmpty ? _address1Controller.text : null,
       'city': _cityController.text,
       'state': _stateController.text,
-      'pincode': _pincodeController.text,
+      'postalCode': _pincodeController.text,
       'country': _countryController.text,
-      'address': _addressController.text,
-      'address1': _address1Controller.text.isNotEmpty ? _address1Controller.text : '',
-      'name': 'User', // Add a default name if needed
+      'street': _streetController.text,
     };
 
     try {
@@ -70,19 +69,25 @@ class _AddressFormState extends State<AddressForm> {
       if (!mounted) return;
       
       if (response['success'] == true) {
-        // Update the address in local storage with API response data if available
-        final updatedAddress = {
-          ...addressData,
+        // Standardize the address format before returning
+        final standardizedAddress = {
+          'phoneNumber': _phoneController.text,
+          'addressLine1': _addressController.text,
+          'addressLine2': _address1Controller.text.isNotEmpty ? _address1Controller.text : null,
+          'city': _cityController.text,
+          'state': _stateController.text,
+          'postalCode': _pincodeController.text,
+          'country': _countryController.text,
           '_id': response['data']?['_id'],
         };
-        await _saveAddressToLocalStorage(updatedAddress);
+        
+        await _saveAddressToLocalStorage(standardizedAddress);
         
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Address added successfully')),
         );
-        Navigator.pop(context, true);
+        Navigator.pop(context, standardizedAddress);
       } else {
-        // Fallback to local storage if API fails
         await _saveAddressToLocalStorage(addressData);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -90,10 +95,9 @@ class _AddressFormState extends State<AddressForm> {
             backgroundColor: Colors.orange,
           ),
         );
-        Navigator.pop(context, true);
+        Navigator.pop(context, addressData);
       }
     } catch (e) {
-      // Save locally if network error
       await _saveAddressToLocalStorage(addressData);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -102,7 +106,7 @@ class _AddressFormState extends State<AddressForm> {
           backgroundColor: Colors.orange,
         ),
       );
-      Navigator.pop(context, true);
+      Navigator.pop(context, addressData);
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
