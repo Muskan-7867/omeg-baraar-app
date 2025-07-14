@@ -33,7 +33,7 @@ class AppRouter {
   static const String forgetpassword = '/forgetpassword';
   static const String paymentmethod = '/paymentmethod';
   static const String addressform = '/addressform';
-    static const String privacy = '/privacy';
+  static const String privacy = '/privacy';
 
   static Map<String, Widget Function(BuildContext)> getRoutes() => {
     splash: (context) => const SplashScreen(),
