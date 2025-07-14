@@ -158,6 +158,7 @@ class _HomeBodyState extends State<HomeBody> {
                           : getCategoryName(selectedCategoryId),
                   onSeeAllPressed: widget.onSeeAllPressed,
                   isSearching: isSearching,
+                  productLimit: 20,
                 ),
 
                 Padding(
@@ -217,6 +218,7 @@ class ProductsOnHomePage extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onSeeAllPressed;
   final bool isSearching;
+  final int productLimit; // Add this line to control how many products to show
 
   const ProductsOnHomePage({
     super.key,
@@ -225,10 +227,17 @@ class ProductsOnHomePage extends StatelessWidget {
     required this.onSeeAllPressed,
     required this.isSearching,
     required this.selectedCategoryName,
+    this.productLimit = 4, // Default to showing 4 products
   });
 
   @override
   Widget build(BuildContext context) {
+    // Get either all products or limited products based on isSearching
+    final productsToShow =
+        isSearching
+            ? displayedProducts
+            : displayedProducts.take(productLimit).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -244,12 +253,12 @@ class ProductsOnHomePage extends StatelessWidget {
         const SizedBox(height: 10),
         isLoading
             ? const ProductCardShimmer()
-            : displayedProducts.isEmpty
+            : productsToShow.isEmpty
             ? const Center(child: Text("No products found."))
             : GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: displayedProducts.length,
+              itemCount: productsToShow.length,
               padding: const EdgeInsets.only(top: 20),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -258,7 +267,7 @@ class ProductsOnHomePage extends StatelessWidget {
                 childAspectRatio: 0.75,
               ),
               itemBuilder: (context, index) {
-                return ProductCard(product: displayedProducts[index]);
+                return ProductCard(product: productsToShow[index]);
               },
             ),
       ],
