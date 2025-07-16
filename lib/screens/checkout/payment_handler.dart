@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/screens/checkout/local_data_handler.dart';
 import 'package:omeg_bazaar/services/order/buy_now_product_api.dart';
@@ -6,7 +5,6 @@ import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
 import 'package:omeg_bazaar/utills/api_constants.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentHandler {
   final Razorpay _razorpay;
