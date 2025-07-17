@@ -63,6 +63,7 @@ class AddressInputFields extends StatelessWidget {
           hintText: 'Enter 6-digit PIN code',
           keyboardType: TextInputType.number,
           maxLength: 6, // Limits to 6 digits
+          borderColor: AppColour.primaryColor,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly, // Only numbers allowed
             LengthLimitingTextInputFormatter(6), // Hard limit
