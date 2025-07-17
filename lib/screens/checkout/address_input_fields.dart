@@ -59,54 +59,54 @@ class AddressInputFields extends StatelessWidget {
         const SizedBox(height: 16),
         CustomTextField(
           controller: pincodeController,
-          labelText: 'Pin Code',
-          hintText: 'Enter pin code',
+          labelText: 'PIN Code',
+          hintText: 'Enter 6-digit PIN code',
           keyboardType: TextInputType.number,
+          maxLength: 6, // Limits to 6 digits
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly, // Only numbers allowed
+            LengthLimitingTextInputFormatter(6), // Hard limit
+          ],
+          validator: (value) {
+            if (value == null || value.isEmpty) return 'Enter PIN code';
+            if (value.length != 6) return 'PIN code must be 6 digits';
+            return null;
+          },
+        ),
+        const SizedBox(height: 16),
+        CustomTextField(
+          controller: phoneController,
+          labelText: 'Phone Number',
+          hintText: 'Enter your 10-digit phone number',
+          keyboardType: TextInputType.phone,
+          maxLength: 10, // Visual limit
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly, // Only allow digits
+            LengthLimitingTextInputFormatter(10), // Hard limit of 10 characters
+          ],
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter pin code';
+              return 'Please enter phone number';
             }
             if (int.tryParse(value) == null) {
-              return 'Please enter a valid number';
+              return 'Please enter a valid number (digits only)';
+            }
+            if (value.length != 10) {
+              return 'Phone number must be exactly 10 digits';
             }
             return null;
           },
           borderColor: AppColour.primaryColor,
+          // Add this to handle the text input changes
+          onChanged: (value) {
+            if (value != null && value.length > 10) {
+              phoneController.text = value.substring(0, 10);
+              phoneController.selection = TextSelection.fromPosition(
+                TextPosition(offset: 10),
+              );
+            }
+          },
         ),
-        const SizedBox(height: 16),
-       CustomTextField(
-  controller: phoneController,
-  labelText: 'Phone Number',
-  hintText: 'Enter your 10-digit phone number',
-  keyboardType: TextInputType.phone,
-  maxLength: 10, // Visual limit
-  inputFormatters: [
-    FilteringTextInputFormatter.digitsOnly, // Only allow digits
-    LengthLimitingTextInputFormatter(10), // Hard limit of 10 characters
-  ],
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter phone number';
-    }
-    if (int.tryParse(value) == null) {
-      return 'Please enter a valid number (digits only)';
-    }
-    if (value.length != 10) {
-      return 'Phone number must be exactly 10 digits';
-    }
-    return null;
-  },
-  borderColor: AppColour.primaryColor,
-  // Add this to handle the text input changes
-  onChanged: (value) {
-    if (value != null && value.length > 10) {
-      phoneController.text = value.substring(0, 10);
-      phoneController.selection = TextSelection.fromPosition(
-        TextPosition(offset: 10),
-      );
-    }
-  },
-),
         const SizedBox(height: 16),
 
         CustomTextField(
