@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:omeg_bazaar/screens/checkout/text_fields.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
@@ -73,23 +74,41 @@ class AddressInputFields extends StatelessWidget {
           borderColor: AppColour.primaryColor,
         ),
         const SizedBox(height: 16),
-        CustomTextField(
-          controller: phoneController,
-          labelText: 'Phone Number',
-          hintText: 'Enter your phone number',
-          keyboardType: TextInputType.phone,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter phone number';
-            }
-            if (int.tryParse(value) == null) {
-              return 'Please enter a valid number';
-            }
-            return null;
-          },
-          borderColor: AppColour.primaryColor,
-        ),
+       CustomTextField(
+  controller: phoneController,
+  labelText: 'Phone Number',
+  hintText: 'Enter your 10-digit phone number',
+  keyboardType: TextInputType.phone,
+  maxLength: 10, // Visual limit
+  inputFormatters: [
+    FilteringTextInputFormatter.digitsOnly, // Only allow digits
+    LengthLimitingTextInputFormatter(10), // Hard limit of 10 characters
+  ],
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter phone number';
+    }
+    if (int.tryParse(value) == null) {
+      return 'Please enter a valid number (digits only)';
+    }
+    if (value.length != 10) {
+      return 'Phone number must be exactly 10 digits';
+    }
+    return null;
+  },
+  borderColor: AppColour.primaryColor,
+  // Add this to handle the text input changes
+  onChanged: (value) {
+    if (value != null && value.length > 10) {
+      phoneController.text = value.substring(0, 10);
+      phoneController.selection = TextSelection.fromPosition(
+        TextPosition(offset: 10),
+      );
+    }
+  },
+),
         const SizedBox(height: 16),
+
         CustomTextField(
           controller: addressController,
           labelText: 'Address Line 1',

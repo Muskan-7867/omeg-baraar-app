@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -6,9 +7,12 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final TextInputType? keyboardType;
   final int? maxLines;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final bool isRequired;
-  final Color? borderColor; // Add this parameter for custom border color
+  final Color? borderColor;
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     super.key,
@@ -17,9 +21,12 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     this.keyboardType,
     this.maxLines = 1,
+    this.maxLength,
+    this.inputFormatters,
     this.validator,
-    this.isRequired = true,
-    this.borderColor, // Add this to constructor
+    this.isRequired = false,
+    this.borderColor,
+    this.onChanged,
   });
 
   @override
@@ -31,27 +38,23 @@ class CustomTextField extends StatelessWidget {
         hintText: hintText,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color:
-                borderColor ??
-                Theme.of(
-                  context,
-                ).primaryColor, // Use custom color or theme primary
+            color: borderColor ?? Theme.of(context).primaryColor,
           ),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color:
-                borderColor ??
-                Theme.of(
-                  context,
-                ).primaryColor, // Use custom color or theme primary
-            width: 2.0, // You can adjust the width for focused state
+            color: borderColor ?? Theme.of(context).primaryColor,
+            width: 2.0,
           ),
         ),
+        counterText: '', // To hide the counter if maxLength is set
       ),
       keyboardType: keyboardType,
       maxLines: maxLines,
+      maxLength: maxLength,
+      inputFormatters: inputFormatters,
       validator: validator ?? (isRequired ? _defaultValidator : null),
+      onChanged: onChanged,
     );
   }
 
