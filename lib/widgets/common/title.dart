@@ -4,6 +4,7 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 class TitleWidget extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAll;
+
   const TitleWidget({super.key, required this.title, this.onSeeAll});
 
   @override
@@ -13,14 +14,25 @@ class TitleWidget extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         onSeeAll != null
             ? TextButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(
+                  AppColour.primaryColor,
+                ),
+
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                  ),
+                ),
+              ),
               onPressed: onSeeAll,
-              child: Text(
+              child: const Text(
                 'See All',
-                style: TextStyle(color: AppColour.primaryColor),
+                style: TextStyle(color: Colors.white),
               ),
             )
             : const SizedBox.shrink(),

@@ -21,7 +21,7 @@ class CategoryButton extends StatelessWidget {
         foregroundColor: AppColour.primaryColor,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(10),
           side: BorderSide(color: AppColour.primaryColor, width: 2),
         ),
       ),
