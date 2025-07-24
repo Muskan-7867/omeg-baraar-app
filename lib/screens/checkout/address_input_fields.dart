@@ -100,7 +100,7 @@ class AddressInputFields extends StatelessWidget {
           borderColor: AppColour.primaryColor,
           // Add this to handle the text input changes
           onChanged: (value) {
-            if (value != null && value.length > 10) {
+            if(value.length > 10) {
               phoneController.text = value.substring(0, 10);
               phoneController.selection = TextSelection.fromPosition(
                 TextPosition(offset: 10),
