@@ -29,17 +29,17 @@ class _MyBannerState extends State<MyBanner> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Special Offers',
+                  'Start Shopping!',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 32,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
                 Text(
-                  'Coming soon',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  'With Omeg Bazaar!!',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ],
             ),
