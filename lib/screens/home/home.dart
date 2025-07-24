@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      appBar: _currentIndex == 2 ? null : OmAppBar(title: 'Omeg-Bazaar'),
+      appBar: _currentIndex == 2 ? null : OmAppBar(title: 'OMEG-BAZAAR'),
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
