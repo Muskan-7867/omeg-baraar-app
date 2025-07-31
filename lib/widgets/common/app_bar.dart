@@ -4,6 +4,16 @@ import 'package:omeg_bazaar/screens/cart/cartpage.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart'; // Add this import
+
+class ThemeController extends GetxController {
+  var isDarkMode = false.obs;
+
+  void toggleTheme() {
+    isDarkMode.value = !isDarkMode.value;
+    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
+  }
+}
 
 class OmAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -49,17 +59,13 @@ class _OmAppBarState extends State<OmAppBar> {
               padding: const EdgeInsets.only(right: 12),
               child: Row(
                 children: [
+                  // Cart icon with badge
                   Stack(
                     children: [
                       IconButton(
                         onPressed: () {
                           cart.loadCartCount();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CartPage(),
-                            ),
-                          );
+                          Get.to(() => CartPage());
                         },
                         icon: const Icon(
                           Icons.shopping_cart,
@@ -88,13 +94,16 @@ class _OmAppBarState extends State<OmAppBar> {
                         ),
                     ],
                   ),
+
+                  // Profile/Login icon
                   IconButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_isLoggedIn) {
-                        Navigator.pushNamed(context, '/profile');
+                        Get.toNamed('/profile');
                       } else {
-                        Navigator.pushNamed(context, '/login').then((_) {
-                          _checkLoginStatus(); // recheck login after returning
+                        Get.toNamed('/login')?.then((_) {
+                          // Optional: Recheck login status after returning from login screen
+                          _checkLoginStatus();
                         });
                       }
                     },

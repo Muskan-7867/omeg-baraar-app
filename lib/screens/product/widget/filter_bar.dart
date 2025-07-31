@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/product/widget/category_section.dart';
 import 'package:omeg_bazaar/screens/product/widget/filter_action_btn.dart';
 import 'package:omeg_bazaar/screens/product/widget/price_slider.dart';
@@ -104,7 +105,7 @@ class _FilterBarState extends State<FilterBar> {
                 'minPrice': _priceRange.start,
                 'maxPrice': _priceRange.end,
               });
-              Navigator.pop(context);
+              Get.back();
             },
             buttonColor: AppColour.primaryColor,
             textColor: Colors.white,
