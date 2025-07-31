@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/screens/cart/widgets/checkout_btn.dart';
 import 'package:omeg_bazaar/screens/cart/widgets/slidable_part.dart';
@@ -101,9 +102,14 @@ class _SingleCartProductState extends State<SingleCartProduct> {
       quantities.removeAt(index);
     });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Item removed from cart')));
+    Get.snackbar(
+      '',
+      'Item removed from cart',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.grey[800]!,
+      colorText: Colors.white,
+      duration: 2.seconds,
+    );
   }
 
   @override

@@ -13,6 +13,7 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isInStock = widget.product['inStock'] ?? false;
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
@@ -64,18 +65,18 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
             children: [
               Text(
                 'Rs ${widget.product['price'] ?? ''} /-',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(width: 8), // Spacing between prices
               Text(
                 'Rs ${widget.product['originalPrice'] ?? ''} /-',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: isDarkTheme ? Colors.white : Colors.grey,
                   decoration: TextDecoration.lineThrough,
                 ),
               ),

@@ -78,6 +78,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       drawer: FilterBar(onApplyFilters: _applyFilters),
@@ -121,14 +122,12 @@ class _ProductsPageState extends State<ProductsPage> {
                           padding: const EdgeInsets.only(left: 14),
                           child: IconButton(
                             onPressed: () {
-                              Scaffold.of(
-                                context,
-                              ).openDrawer(); // ✅ Works inside Builder
+                              Scaffold.of(context).openDrawer();
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.filter_list,
                               size: 32,
-                              color: Colors.black,
+                              color: isDarkTheme ? Colors.white : Colors.black,
                             ),
                           ),
                         ),

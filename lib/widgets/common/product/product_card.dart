@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/services/cart/cart_helper.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_info_and_cartbtn.dart';
@@ -45,16 +46,32 @@ class _ProductCardState extends State<ProductCard> {
     if (inCart) {
       await CartHelper.removeFromCart(prodId);
       cart.decrement();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Removed from cart')));
+      Get.showSnackbar(
+        GetSnackBar(
+          message: 'Removed from cart',
+          duration: const Duration(seconds: 2),
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(10),
+          borderRadius: 4,
+          backgroundColor: Colors.grey[800]!,
+          animationDuration: const Duration(milliseconds: 300),
+          isDismissible: true,
+        ),
+      );
     } else {
       await CartHelper.addToCart(prodId);
 
       cart.increment();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Added to cart')));
+      Get.snackbar(
+        'Cart Products',
+        'Added to cart',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.grey[850]!,
+        colorText: Colors.white,
+        borderRadius: 4.0,
+        margin: const EdgeInsets.all(10),
+      );
     }
 
     setState(() {
@@ -74,7 +91,6 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     final imageUrls = getImageUrls();
-    final bool multipleImages = imageUrls.length > 1;
 
     return Card(
       color: Colors.transparent,
@@ -84,11 +100,7 @@ class _ProductCardState extends State<ProductCard> {
         children: [
           InkWell(
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/singleproduct',
-                arguments: widget.product,
-              );
+              Get.toNamed('/singleproduct', arguments: widget.product);
             },
             child: AspectRatio(
               aspectRatio: 1,

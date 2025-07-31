@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/screens/checkout/checkout.dart';
 import 'package:omeg_bazaar/services/cart/cart_helper.dart';
@@ -39,7 +40,7 @@ class _SingleProductState extends State<SingleProduct> {
         checkIfInCart();
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pop(context);
+          Get.back();
         });
       }
     }
@@ -68,17 +69,29 @@ class _SingleProductState extends State<SingleProduct> {
       await CartHelper.removeFromCart(prodId);
       cart.decrement();
       if (!suppressSnackbar) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Removed from Cart')));
+        Get.snackbar(
+          '', // Empty title for cleaner look
+          'Removed from Cart',
+          colorText: Colors.white,
+          backgroundColor: Colors.grey[850]!,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: 2.seconds,
+          margin: const EdgeInsets.all(16),
+        );
       }
     } else {
       cart.increment();
       await CartHelper.addToCart(prodId);
       if (!suppressSnackbar) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Added to Cart')));
+        Get.snackbar(
+          '',
+          'Added to Cart',
+          colorText: Colors.white,
+          backgroundColor: Colors.grey[850]!,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: 2.seconds,
+          margin: const EdgeInsets.all(16),
+        );
       }
     }
 
@@ -95,7 +108,7 @@ class _SingleProductState extends State<SingleProduct> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Please login to buy now')));
-      Navigator.pushReplacementNamed(context, '/login');
+      Get.offNamed('/login');
       return;
     }
 
@@ -119,17 +132,8 @@ class _SingleProductState extends State<SingleProduct> {
     List<Map<String, dynamic>> products,
     List<int> quantities,
   ) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) =>
-                Checkout(cartProducts: products, quantities: quantities),
-      ),
-    ).then((_) {
-      // When returning from checkout, update the cart status
-      checkIfInCart();
-    });
+    Get.to(() => Checkout(cartProducts: products, quantities: quantities));
+    checkIfInCart();
   }
 
   @override
@@ -149,7 +153,7 @@ class _SingleProductState extends State<SingleProduct> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back_ios),
         ),
         title: const Text('Product Detail'),
