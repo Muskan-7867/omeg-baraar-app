@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/services/user/forgot_password_api.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -29,21 +30,29 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
       try {
         final result = await ForgotPassword().forgetpassword(email);
-
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(result['message'])));
+        Get.snackbar(
+          "Forgot password",
+          result['message'],
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 3),
+        );
 
         if (result['success'] == true) {
           // Optionally navigate back after a delay
           Future.delayed(const Duration(seconds: 2), () {
-            if (mounted) Navigator.pop(context);
+            if (mounted) Get.back();
           });
         }
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
+        Get.snackbar(
+          'Error',
+          'An error occurred: $e',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          borderRadius: 8,
+        );
       } finally {
         if (mounted) {
           setState(() {
@@ -64,7 +73,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
 
 class VerifyUser extends StatefulWidget {
@@ -23,7 +24,7 @@ class _VerifyUserState extends State<VerifyUser> {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/signup');
+                    Get.offAllNamed('/signup');
                   },
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
                 ),

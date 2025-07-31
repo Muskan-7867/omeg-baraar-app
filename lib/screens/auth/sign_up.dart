@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/auth/signup_form.dart';
 import 'package:omeg_bazaar/services/user/user_signup.dart';
 import 'package:omeg_bazaar/widgets/common/divider_signup.dart';
@@ -58,7 +59,7 @@ class _UserSignUpState extends State<UserSignUp> {
 
         await Future.delayed(const Duration(milliseconds: 1500));
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/login');
+        Get.offNamed( '/login');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result['message'] ?? 'Registration failed')),
@@ -90,7 +91,7 @@ class _UserSignUpState extends State<UserSignUp> {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Get.offNamed( '/home');
                   },
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
                 ),

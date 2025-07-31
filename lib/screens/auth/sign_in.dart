@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/auth/signin_form.dart';
 import 'package:omeg_bazaar/services/user/user_signin.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
@@ -54,17 +55,26 @@ class _UserLoginState extends State<UserLogin> {
         _passwordController.clear();
         _formKey.currentState?.reset();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result['message'] ?? 'Login successful')),
+        Get.snackbar(
+          "OMEG BAZAAR",
+          result['message'] ?? 'Login successful',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
         );
 
         await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/home');
+          Get.offAllNamed('/home');
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result['message'] ?? 'Login failed')),
+        Get.snackbar(
+          "OMEG BAZAAR",
+          result['message'] ?? 'Login failed',
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
         );
       }
     } catch (e) {
@@ -72,6 +82,7 @@ class _UserLoginState extends State<UserLogin> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An error occurred: ${e.toString()}')),
       );
+      Get.snackbar("OMEG BAZAAR", "An error occurred: ${e.toString()}");
     } finally {
       if (mounted) {
         setState(() {
@@ -93,7 +104,7 @@ class _UserLoginState extends State<UserLogin> {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Get.offAllNamed('/home');
                   },
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
                 ),
@@ -113,7 +124,7 @@ class _UserLoginState extends State<UserLogin> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, '/forgetpassword');
+                              Get.toNamed('/forgetpassword');
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(right: 12),
