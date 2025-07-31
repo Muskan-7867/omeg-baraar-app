@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/intro/widgets/heading_section.dart';
 import 'package:omeg_bazaar/screens/intro/widgets/image_section.dart';
-import 'package:omeg_bazaar/utills/app_router.dart';
+import 'package:omeg_bazaar/utills/app_pages.dart';
 import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
 
 class Intro extends StatefulWidget {
@@ -26,7 +27,7 @@ class _IntroState extends State<Intro> {
               padding: const EdgeInsets.only(left: 8, right: 8),
               child: RoundedButton(
                 onTap: () {
-                  Navigator.pushReplacementNamed(context, AppRouter.home);
+                  Get.offAllNamed(Routes.home);
                 },
                 title: 'Get Started',
                 height: 50,

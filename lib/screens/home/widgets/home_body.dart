@@ -58,7 +58,7 @@ class _HomeBodyState extends State<HomeBody> {
         });
       }
     } catch (e) {
-      print('Search error: $e');
+      // print('Search error: $e');
     } finally {
       setState(() {
         isProductsLoading = false;
@@ -119,7 +119,7 @@ class _HomeBodyState extends State<HomeBody> {
       );
       setState(() => displayedProducts = data);
     } catch (e) {
-      print('Product fetch error: $e');
+      // print('Product fetch error: $e');
     } finally {
       setState(() => isProductsLoading = false);
     }
@@ -201,6 +201,7 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   ) {
     return Container(
       color: Colors.white,
+
       padding: const EdgeInsets.all(4),
       alignment: Alignment.centerLeft,
       child: CustomSearchBar(onSearch: onSearch),

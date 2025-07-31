@@ -32,14 +32,14 @@ class _MyBannerState extends State<MyBanner> {
                   'Start Shopping!',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 30,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
                 Text(
                   'With Omeg Bazaar!!',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],
             ),

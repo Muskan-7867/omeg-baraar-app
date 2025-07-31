@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/services/cart/cart_helper.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
-import 'package:omeg_bazaar/utills/app_router.dart';
+import 'package:omeg_bazaar/utills/app_pages.dart';
 import 'package:omeg_bazaar/widgets/uiHelper/ui_helper.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     
     // Navigate after 2 seconds (maintaining your current UX)
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(context, AppRouter.intro);
+      Get.offAllNamed(Routes.intro);
     });
   }
 
