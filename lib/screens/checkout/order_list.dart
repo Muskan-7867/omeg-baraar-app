@@ -48,7 +48,52 @@ class _OrderListState extends State<OrderList> {
     }
   }
 
-  Future<void> _processPayment() async {
+Future<void> _showPaymentMethodDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Payment Method'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.money, color: AppColour.primaryColor),
+                  title: const Text('Cash on Delivery (COD)'),
+                  subtitle: const Text('Pay when you receive your order'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _processPayment(isCod: true);
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.payment, color: AppColour.primaryColor),
+                  title: const Text('Online Payment'),
+                  subtitle: const Text('Pay securely with Razorpay'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _processPayment(isCod: false);
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _processPayment({bool isCod = false}) async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -65,7 +110,7 @@ class _OrderListState extends State<OrderList> {
         userAddress: _userData['userAddress'],
       );
 
-      await _paymentHandler!.processPayment();
+      await _paymentHandler!.processPayment(isCod: isCod);
     } catch (e) {
       setState(() => _errorMessage = e.toString());
     } finally {
@@ -112,7 +157,7 @@ class _OrderListState extends State<OrderList> {
             ),
             width: double.infinity,
             child: TextButton(
-              onPressed: _isLoading ? null : _processPayment,
+              onPressed: _isLoading ? null :_showPaymentMethodDialog,
               child:
                   _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)

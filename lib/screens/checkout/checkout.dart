@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/checkout/address_section.dart';
 import 'package:omeg_bazaar/screens/checkout/order_list.dart';
 
@@ -47,7 +48,7 @@ class _CheckoutState extends State<Checkout> {
   }
 
   Future<void> _navigateToAddressForm() async {
-    final result = await Navigator.pushNamed(context, '/addressform');
+    final result = await Get.toNamed('/addressform');
     if (result != null && result is Map<String, dynamic>) {
       setState(() {
         selectedAddress = result;
@@ -63,7 +64,7 @@ class _CheckoutState extends State<Checkout> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 26),
             child: Text(
               'Shipping Address',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

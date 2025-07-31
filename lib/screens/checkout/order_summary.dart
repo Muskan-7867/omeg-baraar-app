@@ -34,14 +34,14 @@ class OrderSummary extends StatelessWidget {
     double grandTotal = itemsTotal + averageDeliveryCharges;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 58),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Column(
         children: [
           SummaryRow(label: 'Items Total', value: itemsTotal),
           SummaryRow(label: 'Delivery Charges', value: averageDeliveryCharges),
           const Divider(),
           SummaryRow(label: 'Grand Total', value: grandTotal, isBold: true),
-          const SizedBox(height: 10),
+          const SizedBox(height: 4),
         ],
       ),
     );

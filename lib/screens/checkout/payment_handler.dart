@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/checkout/local_data_handler.dart';
 import 'package:omeg_bazaar/services/order/buy_now_product_api.dart';
 import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
+import 'package:omeg_bazaar/services/order/cod_order_api.dart';
 import 'package:omeg_bazaar/utills/api_constants.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -34,7 +36,7 @@ class PaymentHandler {
     _razorpay.clear();
   }
 
-  Future<void> processPayment() async {
+  Future<void> processPayment({bool isCod = false}) async {
     if (cartProducts.isEmpty) {
       _showSnackBar('No products in cart');
       return;
@@ -54,71 +56,109 @@ class PaymentHandler {
     }
 
     try {
-      final userData = await LocalDataHandler.loadUserData();
-      final contact = userAddress?['phone']?.toString() ?? '';
-      final email = userData['userData']?['user']?['email']?.toString() ?? '';
-
-      dynamic response;
-      if (isBuyNow) {
-        final product = cartProducts[0];
-        final quantity = quantities[0];
-        response = await BuyNowProductApi.createRazorpayOrder(
-          productId: product['_id'],
-          address: standardizedAddress,
-          quantity: quantity,
-          paymentMethod: 'Razorpay',
-        );
+      if (isCod) {
+        await _processCodOrder(standardizedAddress);
       } else {
-        final cartProductIds =
-            cartProducts.map((product) => product['_id'].toString()).toList();
-
-        response = await CartProductsOrderApi.createRazorPayOrderOfCart(
-          cartProductIds: cartProductIds,
-          address: standardizedAddress,
-          quantities: quantities,
-          paymentMethod: 'Razorpay',
-          token: authToken,
-        );
+        await _processOnlinePayment(standardizedAddress);
       }
-
-      if (response['success'] == false) {
-        throw Exception(response['message'] ?? 'Failed to create order');
-      }
-
-      final orderId =
-          isBuyNow
-              ? response['orderId']?.toString()
-              : response['order']?['_id']?.toString();
-
-      if (orderId == null) {
-        throw Exception('Failed to extract order ID from response');
-      }
-
-      final razorpayOrder = response['razorpayOrder'];
-      if (razorpayOrder == null) {
-        throw Exception('Razorpay order data not found in response');
-      }
-
-      final options = {
-        'key': ApiConstants.razorPayId,
-        'amount': razorpayOrder['amount'].toString(),
-        'currency': razorpayOrder['currency'],
-        'name': 'Omeg Bazaar',
-        'description': 'Order Payment',
-        'order_id': razorpayOrder['id'],
-        'prefill': {'contact': contact, 'email': email},
-        'theme': {
-          'color':
-              '#${AppColour.primaryColor.value.toRadixString(16).substring(2)}',
-          'background': '#ffffff',
-        },
-      };
-
-      _razorpay.open(options);
     } catch (e) {
       _showSnackBar('Error: ${e.toString()}');
       rethrow;
     }
+  }
+
+  Future<void> _processCodOrder(Map<String, dynamic> address) async {
+    try {
+      final response = await CodOrderApi.createCodOrder(
+        cartProducts: cartProducts,
+        quantities: quantities,
+        orderData: {
+          'address': address,
+          'paymentMethod': 'cash_on_delivery',
+          'isPaid': false,
+          'status': 'pending',
+        },
+        token: authToken!,
+        isBuyNow: isBuyNow,
+      );
+
+      if (response['success'] == true) {
+        // Show success snackbar
+        _showSnackBar('Order created successfully!');
+
+        // Navigate back to checkout page
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      } else {
+        throw Exception(response['message'] ?? 'Failed to create COD order');
+      }
+    } catch (e) {
+      _showSnackBar('Error: ${e.toString()}');
+      rethrow;
+    }
+  }
+
+  Future<void> _processOnlinePayment(Map<String, dynamic> address) async {
+    final userData = await LocalDataHandler.loadUserData();
+    final contact = userAddress?['phone']?.toString() ?? '';
+    final email = userData['userData']?['user']?['email']?.toString() ?? '';
+
+    dynamic response;
+    if (isBuyNow) {
+      final product = cartProducts[0];
+      final quantity = quantities[0];
+      response = await BuyNowProductApi.createRazorpayOrder(
+        productId: product['_id'],
+        address: address,
+        quantity: quantity,
+        paymentMethod: 'Razorpay',
+      );
+    } else {
+      final cartProductIds =
+          cartProducts.map((product) => product['_id'].toString()).toList();
+
+      response = await CartProductsOrderApi.createRazorPayOrderOfCart(
+        cartProductIds: cartProductIds,
+        address: address,
+        quantities: quantities,
+        paymentMethod: 'Razorpay',
+        token: authToken,
+      );
+    }
+
+    if (response['success'] == false) {
+      throw Exception(response['message'] ?? 'Failed to create order');
+    }
+
+    final orderId =
+        isBuyNow
+            ? response['orderId']?.toString()
+            : response['order']?['_id']?.toString();
+
+    if (orderId == null) {
+      throw Exception('Failed to extract order ID from response');
+    }
+
+    final razorpayOrder = response['razorpayOrder'];
+    if (razorpayOrder == null) {
+      throw Exception('Razorpay order data not found in response');
+    }
+
+    final options = {
+      'key': ApiConstants.razorPayId,
+      'amount': razorpayOrder['amount'].toString(),
+      'currency': razorpayOrder['currency'],
+      'name': 'Omeg Bazaar',
+      'description': 'Order Payment',
+      'order_id': razorpayOrder['id'],
+      'prefill': {'contact': contact, 'email': email},
+      'theme': {
+        'color':
+            '#${AppColour.primaryColor.value.toRadixString(16).substring(2)}',
+        'background': '#ffffff',
+      },
+    };
+
+    _razorpay.open(options);
   }
 
   Map<String, dynamic> _standardizeAddress(Map<String, dynamic> address) {
@@ -171,7 +211,7 @@ class PaymentHandler {
 
       if (verified) {
         _showSnackBar('Order placed and verified successfully');
-        Navigator.of(context).pushReplacementNamed('/home');
+        Get.offNamed('/home');
       } else {
         _showSnackBar('Payment verification failed');
       }
@@ -189,8 +229,8 @@ class PaymentHandler {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+    );
   }
 }
