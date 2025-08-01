@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/profile/policies/cancellation/cancelation.dart';
 import 'package:omeg_bazaar/screens/profile/policies/contactus/contact_us.dart';
 import 'package:omeg_bazaar/screens/profile/policies/privacy/privacy_data.dart';
@@ -29,10 +30,7 @@ class _PrivacyPolicyState extends State<Policies> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            );
+            Get.off(() => const ProfileScreen());
           },
           icon: const Icon(Icons.arrow_back),
         ),

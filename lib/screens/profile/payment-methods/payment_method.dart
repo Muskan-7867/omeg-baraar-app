@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/profile/payment-methods/method_dropdown.dart';
 import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 
@@ -13,10 +14,7 @@ class PaymentMethod extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            );
+            Get.off(() => const ProfileScreen());
           },
           icon: const Icon(Icons.arrow_back),
         ),

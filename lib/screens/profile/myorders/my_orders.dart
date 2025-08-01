@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/profile/myorders/widgets/orders_tab_bar.dart';
 import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/services/profile_data_service.dart';
@@ -20,10 +21,7 @@ class _MyOrdersState extends State<MyOrders> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            );
+            Get.off(() => const ProfileScreen());
           },
           icon: const Icon(Icons.arrow_back),
         ),

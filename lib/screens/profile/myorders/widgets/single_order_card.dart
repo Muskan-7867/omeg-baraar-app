@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/trackorder/order_track.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
@@ -82,20 +83,16 @@ class OrderProductCard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => OrderTrack(
-                          orderId: orderId,
-                          productImage: imageUrl,
-                          productTitle: title,
-                          productPrice: price,
-                          quantity: quantity,
-                          status: status,
-                          expectedDeliveryDate: expectedDeliveryDate,
-                          paymentMethod: paymentMethod,
-                        ),
+                Get.to(
+                  () => OrderTrack(
+                    orderId: orderId,
+                    productImage: imageUrl,
+                    productTitle: title,
+                    productPrice: price,
+                    quantity: quantity,
+                    status: status,
+                    expectedDeliveryDate: expectedDeliveryDate,
+                    paymentMethod: paymentMethod,
                   ),
                 );
               },
