@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class SignInForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -32,6 +33,14 @@ class SignInForm extends StatelessWidget {
           decoration: InputDecoration(
             labelText: "Email",
             prefixIcon: const Icon(Icons.email),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColour.primaryColor,
+              ), // not focused
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -50,6 +59,14 @@ class SignInForm extends StatelessWidget {
           decoration: InputDecoration(
             labelText: "Password",
             prefixIcon: const Icon(Icons.lock),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColour.primaryColor,
+              ), // not focused
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {

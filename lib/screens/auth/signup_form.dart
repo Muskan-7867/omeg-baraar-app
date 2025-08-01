@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/auth/verify.dart';
 import 'package:omeg_bazaar/services/user/verification_api.dart';
-import 'package:omeg_bazaar/widgets/common/gradient_btn.dart'; 
+import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:omeg_bazaar/widgets/common/gradient_btn.dart';
 
 class SignUpForm extends StatefulWidget {
   final TextEditingController usernameController;
@@ -27,47 +28,59 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _isLoading = false;
   String? _userId;
 
+  @override
+  void dispose() {
+    widget.usernameController.dispose();
+    widget.emailController.dispose();
+    widget.passwordController.dispose();
+    super.dispose();
+  }
+
   Future<void> _sendOtpAndVerify() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+    if (!_formKey.currentState!.validate()) return;
 
-      try {
-        final response = await VerificationService.registerUser(
-          username: widget.usernameController.text,
-          email: widget.emailController.text,
-          password: widget.passwordController.text,
-        );
+    setState(() => _isLoading = true);
 
-        setState(() {
-          _isLoading = false;
-          _userId = response['userId'];
-        });
+    try {
+      final response = await VerificationService.registerUser(
+        username: widget.usernameController.text.trim(),
+        email: widget.emailController.text.trim(),
+        password: widget.passwordController.text,
+      );
 
-        Get.to(
-          () => VerifyUser(
-            email: widget.emailController.text,
-            userId: _userId!,
-            onVerificationComplete: (otp) {
-              _verifyOtpWithBackend(otp);
-            },
-            onResendOtp: () {
-              _resendOtp();
-            },
-          ),
-        );
-      } catch (e) {
+      if (response['userId'] == null) {
+        throw Exception('Registration failed - no user ID returned');
+      }
+
+      setState(() {
+        _userId = response['userId'];
+      });
+
+      Get.to(
+        () => VerifyUser(
+          email: widget.emailController.text.trim(),
+          userId: _userId!,
+          onVerificationComplete: _verifyOtpWithBackend,
+          onResendOtp: _resendOtp,
+        ),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      if (mounted) {
         setState(() => _isLoading = false);
-        Get.snackbar(
-          'Error',
-          'Failed to register. Please try again.',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
       }
     }
   }
 
   Future<void> _verifyOtpWithBackend(String otp) async {
+    if (otp.length != 4 || _userId == null) return;
+
     setState(() => _isLoading = true);
 
     try {
@@ -77,9 +90,7 @@ class _SignUpFormState extends State<SignUpForm> {
       );
 
       if (response['success'] == true) {
-        if (widget.onVerificationSuccess != null) {
-          widget.onVerificationSuccess!();
-        }
+        widget.onVerificationSuccess?.call();
         Get.offAllNamed('/login');
         Get.snackbar(
           'Success',
@@ -88,55 +99,52 @@ class _SignUpFormState extends State<SignUpForm> {
           colorText: Colors.white,
         );
       } else {
-        Get.snackbar(
-          'Error',
-          response['message'] ?? 'Invalid OTP. Please try again.',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        throw Exception(response['message'] ?? 'Verification failed');
       }
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Failed to verify OTP. Please try again.',
+        e.toString(),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      Get.back(); // Return to signup form if verification fails
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   Future<void> _resendOtp() async {
+    if (_userId == null) return;
+
     setState(() => _isLoading = true);
 
     try {
       final response = await VerificationService.resendOtp(userId: _userId!);
 
-      if (response['success'] == true) {
-        Get.snackbar(
-          'Success',
-          'New OTP sent to your email.',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-      } else {
-        Get.snackbar(
-          'Error',
-          response['message'] ?? 'Failed to resend OTP.',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+      if (response['success'] != true) {
+        throw Exception(response['message'] ?? 'Failed to resend OTP');
       }
+
+      Get.snackbar(
+        'Success',
+        'New OTP sent to your email.',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Failed to resend OTP. Please try again.',
+        e.toString(),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -171,10 +179,21 @@ class _SignUpFormState extends State<SignUpForm> {
               decoration: const InputDecoration(
                 labelText: "Username",
                 prefixIcon: Icon(Icons.supervised_user_circle),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColour.primaryColor,
+                  ), // not focused
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2.0),
+                ),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a username';
+                }
+                if (value.length < 3) {
+                  return 'Username must be at least 3 characters';
                 }
                 return null;
               },
@@ -186,6 +205,15 @@ class _SignUpFormState extends State<SignUpForm> {
               decoration: const InputDecoration(
                 labelText: "Email",
                 prefixIcon: Icon(Icons.email),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColour.primaryColor,
+                  ), // not focused
+                ),
+
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2.0),
+                ),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -204,6 +232,15 @@ class _SignUpFormState extends State<SignUpForm> {
               decoration: const InputDecoration(
                 labelText: "Password",
                 prefixIcon: Icon(Icons.lock),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColour.primaryColor,
+                  ), // not focused
+                ),
+
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2.0),
+                ),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -217,7 +254,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 return null;
               },
             ),
-            const SizedBox(height: 30), 
+            const SizedBox(height: 30),
             _isLoading
                 ? const CircularProgressIndicator()
                 : GradientButton(
