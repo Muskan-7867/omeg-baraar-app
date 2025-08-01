@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/services/user/add_address_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,81 +38,91 @@ class _AddressFormState extends State<AddressForm> {
     super.dispose();
   }
 
- Future<void> _submitForm() async {
-  if (_formKey.currentState!.validate()) {
-    setState(() => _isLoading = true);
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
 
-    final addressData = {
-      'phoneNumber': _phoneController.text,
-      'addressLine1': _addressController.text,
-      'addressLine2': _address1Controller.text.isNotEmpty ? _address1Controller.text : null,
-      'city': _cityController.text,
-      'state': _stateController.text,
-      'postalCode': _pincodeController.text,
-      'country': _countryController.text,
-      'street': _streetController.text,
-    };
+      final addressData = {
+        'phoneNumber': _phoneController.text,
+        'addressLine1': _addressController.text,
+        'addressLine2':
+            _address1Controller.text.isNotEmpty
+                ? _address1Controller.text
+                : null,
+        'city': _cityController.text,
+        'state': _stateController.text,
+        'postalCode': _pincodeController.text,
+        'country': _countryController.text,
+        'street': _streetController.text,
+      };
 
-    try {
-      final response = await AddAddressApi.addAddress(
-        phone: _phoneController.text,
-        street: _streetController.text,
-        city: _cityController.text,
-        state: _stateController.text,
-        pincode: _pincodeController.text,
-        country: _countryController.text,
-        address: _addressController.text,
-        address1: _address1Controller.text.isNotEmpty ? _address1Controller.text : null,
-      );
-
-      if (!mounted) return;
-      
-      if (response['success'] == true) {
-        // Standardize the address format before returning
-        final standardizedAddress = {
-          'phoneNumber': _phoneController.text,
-          'addressLine1': _addressController.text,
-          'addressLine2': _address1Controller.text.isNotEmpty ? _address1Controller.text : null,
-          'city': _cityController.text,
-          'state': _stateController.text,
-          'postalCode': _pincodeController.text,
-          'country': _countryController.text,
-          '_id': response['data']?['_id'],
-        };
-        
-        await _saveAddressToLocalStorage(standardizedAddress);
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Address added successfully')),
+      try {
+        final response = await AddAddressApi.addAddress(
+          phone: _phoneController.text,
+          street: _streetController.text,
+          city: _cityController.text,
+          state: _stateController.text,
+          pincode: _pincodeController.text,
+          country: _countryController.text,
+          address: _addressController.text,
+          address1:
+              _address1Controller.text.isNotEmpty
+                  ? _address1Controller.text
+                  : null,
         );
-        Navigator.pop(context, standardizedAddress);
-      } else {
+
+        if (!mounted) return;
+
+        if (response['success'] == true) {
+          // Standardize the address format before returning
+          final standardizedAddress = {
+            'phoneNumber': _phoneController.text,
+            'addressLine1': _addressController.text,
+            'addressLine2':
+                _address1Controller.text.isNotEmpty
+                    ? _address1Controller.text
+                    : null,
+            'city': _cityController.text,
+            'state': _stateController.text,
+            'postalCode': _pincodeController.text,
+            'country': _countryController.text,
+            '_id': response['data']?['_id'],
+          };
+
+          await _saveAddressToLocalStorage(standardizedAddress);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Address added successfully')),
+          );
+          Navigator.pop(context, standardizedAddress);
+        } else {
+          await _saveAddressToLocalStorage(addressData);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response['message'] ?? 'Address saved locally'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+          Navigator.pop(context, addressData);
+        }
+      } catch (e) {
         await _saveAddressToLocalStorage(addressData);
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['message'] ?? 'Address saved locally'),
+            content: const Text('Network error - Address saved locally'),
             backgroundColor: Colors.orange,
           ),
         );
         Navigator.pop(context, addressData);
-      }
-    } catch (e) {
-      await _saveAddressToLocalStorage(addressData);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Network error - Address saved locally'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      Navigator.pop(context, addressData);
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
     }
   }
-}
+
   // Helper method to save address to local storage
   Future<void> _saveAddressToLocalStorage(
     Map<String, dynamic> addressData,
