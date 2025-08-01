@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/home/home.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/profile_dropdowns.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/profile_options.dart';
@@ -66,10 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed:
-              () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const Home()),
-              ),
+              () => Get.off(() => const Home()),
           icon: const Icon(Icons.arrow_back),
         ),
       ),

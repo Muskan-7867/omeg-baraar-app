@@ -76,7 +76,7 @@ class _CategoryProductState extends State<CategoryProduct>
       children: [
         isLoading
             ? const CategoryShimmerLoader()
-            : SingleChildScrollView(
+            : SingleChildScrollView(    
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               child: Row(

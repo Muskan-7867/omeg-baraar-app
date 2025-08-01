@@ -51,11 +51,7 @@ class _HeadingSectionState extends State<HeadingSection> {
               "Discover a seamless shopping experience with unbeatable deals, top-quality products, and convenience at your fingertips. Shop smarter today!",
               textAlign: TextAlign.center,
 
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w300,
-                color: Colors.grey[800],
-              ),
+              style: TextStyle(fontSize: 12, color: Colors.black),
             ),
           ),
         ],

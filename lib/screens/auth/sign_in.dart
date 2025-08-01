@@ -60,7 +60,7 @@ class _UserLoginState extends State<UserLogin> {
           result['message'] ?? 'Login successful',
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 3),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.green,
           colorText: Colors.white,
         );
 
