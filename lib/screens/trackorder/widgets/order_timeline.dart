@@ -9,22 +9,16 @@ class OrderTimeLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Convert status to lowercase for case-insensitive comparison
     final currentStatus = status.toLowerCase();
-
-    // Determine which steps are completed based on current status
-    final isOrderPlacedDone = true; // Always true since order exists
-    final isInProgressDone = currentStatus != 'pending';
-    final isShippedDone =
-        currentStatus == 'shipped' || currentStatus == 'delivered';
-    final isDeliveredDone = currentStatus == 'delivered';
+    final isCancelled = currentStatus == 'cancelled';
 
     return ListView(
       children: [
         buildTile(
           isFirst: true,
           isLast: false,
-          isDone: isOrderPlacedDone,
+          isDone: true, // Order placed is always done
+          isCancelled: isCancelled,
           title: "Order Placed",
           subtitle: "Your order has been placed",
           icon: Icons.check_circle,
@@ -32,34 +26,43 @@ class OrderTimeLine extends StatelessWidget {
         buildTile(
           isFirst: false,
           isLast: false,
-          isDone: isInProgressDone,
-          title: 'In Progress',
+          isDone: currentStatus != 'pending',
+          isCancelled: isCancelled,
+          title: isCancelled ? 'Cancelled' : 'In Progress',
           subtitle:
-              isInProgressDone
-                  ? 'Your order is being processed'
-                  : 'Waiting to process your order',
-          icon: Icons.inventory,
+              isCancelled
+                  ? 'Your order has been cancelled'
+                  : (currentStatus != 'pending'
+                      ? 'Your order is being processed'
+                      : 'Waiting to process your order'),
+          icon: isCancelled ? Icons.cancel : Icons.inventory,
         ),
-        buildTile(
-          isFirst: false,
-          isLast: false,
-          isDone: isShippedDone,
-          title: 'Shipped',
-          subtitle:
-              isShippedDone ? 'Your order has been shipped' : 'Not yet shipped',
-          icon: Icons.local_shipping,
-        ),
-        buildTile(
-          isFirst: false,
-          isLast: true,
-          isDone: isDeliveredDone,
-          title: 'Delivered',
-          subtitle:
-              isDeliveredDone
-                  ? 'Your order has been delivered'
-                  : 'Not yet delivered',
-          icon: Icons.inventory_2,
-        ),
+        if (!isCancelled) ...[
+          buildTile(
+            isFirst: false,
+            isLast: false,
+            isDone: currentStatus == 'shipped' || currentStatus == 'delivered',
+            isCancelled: false,
+            title: 'Shipped',
+            subtitle:
+                (currentStatus == 'shipped' || currentStatus == 'delivered')
+                    ? 'Your order has been shipped'
+                    : 'Not yet shipped',
+            icon: Icons.local_shipping,
+          ),
+          buildTile(
+            isFirst: false,
+            isLast: true,
+            isDone: currentStatus == 'delivered',
+            isCancelled: false,
+            title: 'Delivered',
+            subtitle:
+                currentStatus == 'delivered'
+                    ? 'Your order has been delivered'
+                    : 'Not yet delivered',
+            icon: Icons.inventory_2,
+          ),
+        ],
       ],
     );
   }
@@ -68,25 +71,49 @@ class OrderTimeLine extends StatelessWidget {
     required bool isFirst,
     required bool isLast,
     required bool isDone,
+    required bool isCancelled,
     required String title,
     required String subtitle,
     required IconData icon,
   }) {
+    final indicatorColor =
+        isCancelled
+            ? Colors.red
+            : (isDone ? AppColour.primaryColor : Colors.grey.shade400);
+
     return TimelineTile(
       isFirst: isFirst,
       isLast: isLast,
       indicatorStyle: IndicatorStyle(
         width: 20,
-        color: isDone ? AppColour.primaryColor : Colors.grey.shade400,
+        color: indicatorColor,
         iconStyle: IconStyle(
-          iconData: isDone ? Icons.check : Icons.radio_button_unchecked,
-          color: isDone ? Colors.white : Colors.grey.shade300,
+          iconData:
+              isCancelled
+                  ? Icons.cancel
+                  : (isDone ? Icons.check : Icons.radio_button_unchecked),
+          color: Colors.white,
         ),
       ),
       beforeLineStyle: LineStyle(
-        color: isDone ? AppColour.primaryColor : Colors.grey.shade300,
+        color:
+            isCancelled
+                ? Colors.red
+                : (isDone ? AppColour.primaryColor : Colors.grey.shade300),
         thickness: 2,
       ),
+      afterLineStyle:
+          isLast
+              ? null
+              : LineStyle(
+                color:
+                    isCancelled
+                        ? Colors.red
+                        : (isDone
+                            ? AppColour.primaryColor
+                            : Colors.grey.shade300),
+                thickness: 2,
+              ),
       endChild: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 18),
         child: Row(
@@ -99,7 +126,10 @@ class OrderTimeLine extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: isDone ? Colors.black : Colors.grey.shade600,
+                      color:
+                          isCancelled
+                              ? Colors.red
+                              : (isDone ? Colors.black : Colors.grey.shade600),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -107,7 +137,11 @@ class OrderTimeLine extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                       color:
-                          isDone ? Colors.grey.shade700 : Colors.grey.shade500,
+                          isCancelled
+                              ? Colors.red.shade700
+                              : (isDone
+                                  ? Colors.grey.shade700
+                                  : Colors.grey.shade500),
                       fontSize: 12,
                     ),
                   ),
@@ -116,7 +150,12 @@ class OrderTimeLine extends StatelessWidget {
             ),
             Icon(
               icon,
-              color: isDone ? AppColour.primaryColor : Colors.grey.shade400,
+              color:
+                  isCancelled
+                      ? Colors.red
+                      : (isDone
+                          ? AppColour.primaryColor
+                          : Colors.grey.shade400),
             ),
           ],
         ),
