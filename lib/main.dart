@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/app/bindings/app_bindings.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
+import 'package:omeg_bazaar/utills/app_pages.dart';
 import 'package:omeg_bazaar/utills/app_router.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+   WidgetsFlutterBinding.ensureInitialized(); 
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Center(
       child: Text(
@@ -14,27 +19,33 @@ void main() {
     );
   };
 
+  // Check first launch status before running the app
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstLaunch = prefs.getBool('first_launch') ?? true;
+  final initialRoute = isFirstLaunch ? Routes.splash : Routes.home;
+
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (context) => CartProvider())],
-      child: const MyApp(),
+            child: MyApp(initialRoute: initialRoute),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialRoute;
+  const MyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Omeg Bazaar',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      routes: AppRouter.getRoutes(),
-      initialRoute: AppRouter.splash,
+      title: 'Omeg-Bazaar',
+      getPages: AppPages.pages,
+      initialBinding: AppBindings(),
+
+      routes: Routes.getRoutes(),
+       initialRoute: initialRoute,
     );
   }
 }
