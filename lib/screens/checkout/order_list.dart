@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omeg_bazaar/screens/checkout/confirm_cod_order.dart';
 import 'package:omeg_bazaar/screens/checkout/order_list_data.dart';
 import 'package:omeg_bazaar/screens/checkout/order_summary.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
@@ -16,7 +17,7 @@ class OrderList extends StatefulWidget {
     required this.cartProducts,
     required this.quantities,
     this.isBuyNow = false,
-    this.selectedAddress,
+    required this.selectedAddress, // Changed to required
   });
 
   @override
@@ -48,7 +49,12 @@ class _OrderListState extends State<OrderList> {
     }
   }
 
-Future<void> _showPaymentMethodDialog() async {
+  Future<void> _showPaymentMethodDialog() async {
+    if (widget.selectedAddress == null) {
+      _showSnackBar('Please select a shipping address before proceeding');
+      return;
+    }
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -59,17 +65,23 @@ Future<void> _showPaymentMethodDialog() async {
             child: ListBody(
               children: <Widget>[
                 ListTile(
-                  leading: const Icon(Icons.money, color: AppColour.primaryColor),
+                  leading: const Icon(
+                    Icons.money,
+                    color: AppColour.primaryColor,
+                  ),
                   title: const Text('Cash on Delivery (COD)'),
                   subtitle: const Text('Pay when you receive your order'),
                   onTap: () {
                     Navigator.of(context).pop();
-                    _processPayment(isCod: true);
+                    _navigateToCODScreen();
                   },
                 ),
                 const Divider(),
                 ListTile(
-                  leading: const Icon(Icons.payment, color: AppColour.primaryColor),
+                  leading: const Icon(
+                    Icons.payment,
+                    color: AppColour.primaryColor,
+                  ),
                   title: const Text('Online Payment'),
                   subtitle: const Text('Pay securely with Razorpay'),
                   onTap: () {
@@ -93,6 +105,58 @@ Future<void> _showPaymentMethodDialog() async {
     );
   }
 
+  void _navigateToCODScreen() {
+    if (widget.selectedAddress == null) {
+      _showSnackBar('Please select a shipping address');
+      return;
+    }
+
+    final standardizedAddress = _standardizeAddress(widget.selectedAddress!);
+
+    // Calculate total amount
+    double totalAmount = 0;
+    for (int i = 0; i < widget.cartProducts.length; i++) {
+      final product = widget.cartProducts[i];
+      final quantity = widget.quantities[i];
+      totalAmount += (product['price'] * quantity);
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => ConfirmCODScreen(
+              cartProducts: widget.cartProducts,
+              quantities: widget.quantities,
+              address: standardizedAddress,
+              totalAmount: totalAmount,
+              isBuyNow: widget.isBuyNow,
+              onConfirm: () => _processPayment(isCod: true),
+            ),
+      ),
+    );
+  }
+
+  Map<String, dynamic> _standardizeAddress(Map<String, dynamic> address) {
+    return {
+      'phone': address['phoneNumber'] ?? address['phone'],
+      'street': address['street'] ?? '',
+      'city': address['city'],
+      'state': address['state'],
+      'pincode': address['postalCode'] ?? address['pincode'],
+      'country': address['country'],
+      'address': address['addressLine1'] ?? address['address'],
+      'address1': address['addressLine2'] ?? address['address1'],
+      '_id': address['_id'],
+    };
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+    );
+  }
+
   Future<void> _processPayment({bool isCod = false}) async {
     setState(() {
       _isLoading = true;
@@ -107,7 +171,6 @@ Future<void> _showPaymentMethodDialog() async {
         quantities: widget.quantities,
         authToken: _userData['authToken'],
         selectedAddress: widget.selectedAddress,
-        userAddress: _userData['userAddress'],
       );
 
       await _paymentHandler!.processPayment(isCod: isCod);
@@ -157,7 +220,7 @@ Future<void> _showPaymentMethodDialog() async {
             ),
             width: double.infinity,
             child: TextButton(
-              onPressed: _isLoading ? null :_showPaymentMethodDialog,
+              onPressed: _isLoading ? null : _showPaymentMethodDialog,
               child:
                   _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
