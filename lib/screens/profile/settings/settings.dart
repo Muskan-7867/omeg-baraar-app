@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/profile_dropdowns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,11 +18,11 @@ class Settings extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => Get.back(result: false),
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () => Get.back(result: true),
               child: const Text('Delete'),
             ),
           ],
@@ -33,17 +34,23 @@ class Settings extends StatelessWidget {
       try {
         final prefs = await SharedPreferences.getInstance();
         await prefs.clear();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Local data deleted successfully')),
+        Get.snackbar(
+          '',
+          'Local data deleted successfully',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: 2.seconds,
         );
         Future.delayed(const Duration(milliseconds: 1500), () {
-          Navigator.pushReplacementNamed(context, '/home');
+          Get.offAllNamed('/home');
         });
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to delete local data: ${e.toString()}'),
-          ),
+        Get.snackbar(
+          'Error',
+          'Failed to delete local data: ${e.toString()}',
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: 3.seconds,
         );
       }
     }
@@ -57,10 +64,7 @@ class Settings extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            );
+            Get.off(() => const ProfileScreen());
           },
           icon: const Icon(Icons.arrow_back),
         ),

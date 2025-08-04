@@ -1,5 +1,5 @@
-// cart_summary.dart
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/checkout/checkout.dart';
 import 'package:omeg_bazaar/services/order/cart_products_order_api.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
@@ -94,29 +94,26 @@ class CartSummary extends StatelessWidget {
                         token: token,
                       );
 
-                  // Close loading indicator
-                  Navigator.of(context).pop();
+                  Get.back();
 
-                  // Navigate to checkout with the response
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => Checkout(
-                            cartProducts: cartProducts,
-                            quantities: quantities,
-                          ),
+                  Get.to(
+                    () => Checkout(
+                      cartProducts: cartProducts,
+                      quantities: quantities,
                     ),
                   );
                 } catch (e) {
-                  // Close loading indicator if still showing
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (Get.key.currentState?.canPop() ?? false) {
+                    Get.back();
                   }
 
-                  // Show error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: ${e.toString()}')),
+                  Get.snackbar(
+                    'Error', // Title
+                    e.toString(), // Message
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.black,
+                    colorText: Colors.white,
+                    duration: Duration(seconds: 3),
                   );
                 }
               },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/trackorder/widgets/order_timeline.dart';
 import 'package:omeg_bazaar/screens/trackorder/widgets/tarck_order_card.dart';
 
@@ -37,7 +38,7 @@ class _OrderTrackState extends State<OrderTrack> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+           Get.back();
           },
           icon: const Icon(Icons.arrow_back),
         ),

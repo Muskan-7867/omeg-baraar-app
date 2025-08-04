@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,22 +11,25 @@ class LogOutSheetCart extends StatelessWidget {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
-      Navigator.of(
-        context,
-      ).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Logged out successfully'),
-          duration: Duration(seconds: 2),
-        ),
+      Get.offAllNamed("/home");
+      Get.snackbar(
+        '', // Empty title
+        'Logged out successfully',
+        colorText: Colors.white,
+        backgroundColor: Colors.grey,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: 2.seconds,
+        margin: const EdgeInsets.all(16),
       );
     } catch (e) {
       // Show error message if logout fails
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logout failed: ${e.toString()}'),
-          duration: Duration(seconds: 2),
-        ),
+      Get.snackbar(
+        'Logout Failed',
+        e.toString(),
+        colorText: Colors.white,
+        backgroundColor: Colors.red.shade600,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: 2.seconds,
       );
     }
   }
@@ -71,7 +75,7 @@ class LogOutSheetCart extends StatelessWidget {
                     ),
 
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
                     child: const Text('Cancel'),
                   ),

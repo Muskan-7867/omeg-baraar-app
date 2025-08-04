@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DividerAndSignUp extends StatelessWidget {
   final bool isLoginPage;
@@ -18,12 +19,7 @@ class DividerAndSignUp extends StatelessWidget {
                   : "Already have an account? ",
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  isLoginPage ? '/signup' : '/login',
-                );
-              },
+              onTap: () =>  Get.toNamed(isLoginPage ? '/signup' : '/login'),
               child: Text(
                 isLoginPage ? "Sign Up" : "Sign In",
                 style: const TextStyle(
