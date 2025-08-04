@@ -7,6 +7,7 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/utills/app_pages.dart';
 import 'package:omeg_bazaar/widgets/uiHelper/ui_helper.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,21 +20,32 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeAndNavigate();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeAndNavigate();
+    });
   }
 
   Future<void> _initializeAndNavigate() async {
-    // Initialize cart count
-    final cart = Provider.of<CartProvider>(context, listen: false);
-    final items = await CartHelper.getCartItems();
-    cart.setCount(items.length);
+    try {
+      // Initialize cart count
+      final cart = Provider.of<CartProvider>(context, listen: false);
+      final items = await CartHelper.getCartItems();
+      cart.setCount(items.length);
 
-    // Add any other initialization tasks here
-    
-    // Navigate after 2 seconds (maintaining your current UX)
-    Timer(const Duration(seconds: 2), () {
-      Get.offAllNamed(Routes.intro);
-    });
+      // Navigate after 2 seconds
+      Timer(const Duration(seconds: 2), () async {
+        // Mark that the app has been launched before
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('first_launch', false);
+        
+        // Navigate to intro screen (only first time)
+        Get.offAllNamed(Routes.intro, predicate: (route) => false);
+      });
+    } catch (e) {
+      debugPrint('Error in splash screen: $e');
+      // Fallback navigation
+      Get.offAllNamed(Routes.home, predicate: (route) => false);
+    }
   }
 
   @override
