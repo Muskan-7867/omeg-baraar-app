@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/log_out_bottom_sheet.dart';
 
 List<Map<String, dynamic>> getProfileOptions(BuildContext context) {
@@ -7,25 +8,25 @@ List<Map<String, dynamic>> getProfileOptions(BuildContext context) {
       'icon': Icons.shopping_basket,
       'title': "My Orders",
       'onTap': () {
-        Navigator.pushReplacementNamed(context, "/orders");
+        Get.offNamed( "/orders");
       },
     },
 
     {
       'icon': Icons.payment,
       'title': "Payment Methods",
-      'onTap': () => Navigator.pushReplacementNamed(context, "/paymentmethod"),
+      'onTap': () => Get.offNamed( "/paymentmethod"),
     },
     {'icon': Icons.help_center, 'title': "Help Center", 'onTap': () {}},
     {
       'icon': Icons.privacy_tip,
       'title': "Privacy Policy",
-      'onTap': () => Navigator.pushReplacementNamed(context, "/privacy"),
+      'onTap': () => Get.offNamed( "/privacy"),
     },
     {
       'icon': Icons.settings,
       'title': "Settings",
-      'onTap': () => Navigator.pushReplacementNamed(context, "/settings"),
+      'onTap': () => Get.offNamed( "/settings"),
     },
     {
       'icon': Icons.logout,

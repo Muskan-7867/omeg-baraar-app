@@ -21,11 +21,7 @@ class ProductInfoShimmer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Product name placeholder
-                  Container(
-                    width: 180,
-                    height: 20,
-                    color: Colors.white,
-                  ),
+                  Container(width: 180, height: 20, color: Colors.white),
                   // Stock badge placeholder
                   Container(
                     width: 70,
@@ -53,11 +49,7 @@ class ProductInfoShimmer extends StatelessWidget {
             const SizedBox(height: 12),
 
             /// Product Details Title
-            Container(
-              width: 150,
-              height: 20,
-              color: Colors.white,
-            ),
+            Container(width: 150, height: 20, color: Colors.white),
 
             const SizedBox(height: 8),
 
