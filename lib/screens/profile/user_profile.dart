@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/home/home.dart';
@@ -6,6 +7,8 @@ import 'package:omeg_bazaar/screens/profile/widgets/profile_options.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/profile_options_data.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/services/profile_data_service.dart';
 import 'package:omeg_bazaar/screens/profile/widgets/user_info.dart';
+import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,9 +19,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   Map<String, dynamic>? userData;
-  List<dynamic>? userOrders;
-  bool isLoading = false;
-  bool showUserInfoLoader = false;
+  bool isLoading = true;
+  bool isLoggedIn = false;
 
   @override
   void initState() {
@@ -27,63 +29,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    // Show loader only if data takes more than 300ms to load
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted && isLoading) {
-        setState(() => showUserInfoLoader = true);
-      }
-    });
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
 
-    setState(() => isLoading = true);
+    if (token == null) {
+      if (mounted) {
+        setState(() {
+          isLoggedIn = false;
+          isLoading = false;
+        });
+      }
+      return;
+    }
 
     try {
       final data = await ProfileDataService.loadUserData();
       if (mounted) {
         setState(() {
           userData = data['userData'];
-          userOrders = data['userOrders'];
+          isLoggedIn = true;
           isLoading = false;
-          showUserInfoLoader = false;
         });
+        await prefs.setString('userData', jsonEncode(userData));
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           isLoading = false;
-          showUserInfoLoader = false;
-          userOrders = [];
         });
       }
+      await prefs.remove('authToken');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Handle redirect if not logged in
+    if (!isLoggedIn && !isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.offAll(() => const Home());
+      });
+    }
+
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: Colors.white, // Prevent black screen
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColour.primaryColor),
+          ),
+        ),
+      );
+    }
+
+    if (!isLoggedIn) {
+      return const SizedBox.shrink(); // Will redirect momentarily
+    }
+
     final options = getProfileOptions(context);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        elevation: 0,
         leading: IconButton(
-          onPressed:
-              () => Get.off(() => const Home()),
           icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.off(() => const Home()),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                UserInfo(user: userData),
-                if (showUserInfoLoader)
-                  SizedBox(
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-              ],
-            ),
+            UserInfo(user: userData),
             const SizedBox(height: 20),
             const ProfileOptions(),
             const SizedBox(height: 20),

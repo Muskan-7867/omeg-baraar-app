@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/screens/cart/cartpage.dart';
+import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -99,10 +100,14 @@ class _OmAppBarState extends State<OmAppBar> {
                   IconButton(
                     onPressed: () async {
                       if (_isLoggedIn) {
-                        Get.toNamed('/profile');
+                        
+                        Get.to(
+                          () => ProfileScreen(),
+                          transition: Transition.fadeIn,
+                          duration: Duration(milliseconds: 300),
+                        );
                       } else {
                         Get.toNamed('/login')?.then((_) {
-                          // Optional: Recheck login status after returning from login screen
                           _checkLoginStatus();
                         });
                       }
