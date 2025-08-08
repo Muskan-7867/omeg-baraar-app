@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
@@ -26,22 +25,59 @@ class _SingleCartProductState extends State<SingleCartProduct> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Initialize the cart count when the page loads
-      Provider.of<CartProvider>(context, listen: false).loadCartCount();
+      _loadCartDataAndUpdateCount();
     });
-    loadCartData();
   }
 
-  Future<void> loadCartData() async {
+  Future<void> _loadCartDataAndUpdateCount() async {
+    setState(() {
+      isLoading = true;
+      cartProducts.clear();
+      quantities.clear();
+    });
+
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final cartIds = prefs.getStringList('cartProdIds') ?? [];
+
       final (products, loadedQuantities) = await CartDataLoader.load();
+
+      // Filter products to only include those in cartIds
+      final validProducts =
+          products
+              .where((product) => cartIds.contains(product['_id'].toString()))
+              .toList();
+      final validQuantities =
+          loadedQuantities
+              .asMap()
+              .entries
+              .where(
+                (entry) =>
+                    cartIds.contains(products[entry.key]['_id'].toString()),
+              )
+              .map((entry) => entry.value)
+              .toList();
+
       setState(() {
-        cartProducts = List<Map<String, dynamic>>.from(products);
-        quantities = List<int>.from(loadedQuantities);
+        cartProducts = List<Map<String, dynamic>>.from(validProducts);
+        quantities = List<int>.from(validQuantities);
+        isLoading = false;
       });
+
+      // Update CartProvider count
+      Provider.of<CartProvider>(
+        context,
+        listen: false,
+      ).setCount(cartIds.length);
     } catch (e) {
-      // You can log or show an error message here
-    } finally {
+      Get.snackbar(
+        'Error',
+        'Failed to load cart data: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
       setState(() {
         isLoading = false;
       });
@@ -65,7 +101,7 @@ class _SingleCartProductState extends State<SingleCartProduct> {
   }
 
   Future<void> _saveQuantity(int index, int newQuantity) async {
-    final prodId = cartProducts[index]['id'].toString();
+    final prodId = cartProducts[index]['_id'].toString();
     final prefs = await SharedPreferences.getInstance();
     final quantitiesMap = Map<String, int>.from(
       prefs.getString('cartQuantities') != null
@@ -80,11 +116,12 @@ class _SingleCartProductState extends State<SingleCartProduct> {
   }
 
   Future<void> removeItem(int index) async {
-    final prodId = cartProducts[index]['id'].toString();
+    final prodId = cartProducts[index]['_id'].toString();
     final prefs = await SharedPreferences.getInstance();
     final ids = prefs.getStringList('cartProdIds') ?? [];
     ids.remove(prodId);
     await prefs.setStringList('cartProdIds', ids);
+    // print('Cart IDs after removal: $ids');
 
     final quantitiesMap = Map<String, int>.from(
       prefs.getString('cartQuantities') != null
@@ -95,12 +132,14 @@ class _SingleCartProductState extends State<SingleCartProduct> {
     );
     quantitiesMap.remove(prodId);
     await prefs.setString('cartQuantities', jsonEncode(quantitiesMap));
-    Provider.of<CartProvider>(context, listen: false).decrement();
 
     setState(() {
       cartProducts.removeAt(index);
       quantities.removeAt(index);
     });
+
+    // Update CartProvider count and notify listeners
+    Provider.of<CartProvider>(context, listen: false).setCount(ids.length);
 
     Get.snackbar(
       '',
@@ -108,14 +147,15 @@ class _SingleCartProductState extends State<SingleCartProduct> {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.grey[800]!,
       colorText: Colors.white,
-      duration: 2.seconds,
+      duration: const Duration(seconds: 2),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    // print('Cart products to display: $cartProducts');
     if (isLoading) {
-      return SingleCartProdCardShimmer();
+      return const SingleCartProdCardShimmer();
     }
 
     if (cartProducts.isEmpty) {

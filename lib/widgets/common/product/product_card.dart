@@ -23,12 +23,21 @@ class _ProductCardState extends State<ProductCard> {
   void initState() {
     super.initState();
     checkCartStatus();
+    
+    Provider.of<CartProvider>(context, listen: false).addListener(_onCartChange);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    // Remove listener to prevent memory leaks
+    Provider.of<CartProvider>(context, listen: false).removeListener(_onCartChange);
     super.dispose();
+  }
+
+  void _onCartChange() {
+    // Re-check cart status when CartProvider notifies changes
+    checkCartStatus();
   }
 
   Future<void> checkCartStatus() async {
@@ -60,7 +69,6 @@ class _ProductCardState extends State<ProductCard> {
       );
     } else {
       await CartHelper.addToCart(prodId);
-
       cart.increment();
       Get.snackbar(
         'Cart Products',
@@ -114,7 +122,6 @@ class _ProductCardState extends State<ProductCard> {
                         _currentImageIndex = index;
                       });
                     },
-
                     itemBuilder: (context, index) {
                       return Container(
                         decoration: BoxDecoration(
