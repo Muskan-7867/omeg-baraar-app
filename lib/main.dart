@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Center(
       child: Text(
@@ -27,7 +27,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (context) => CartProvider())],
-            child: MyApp(initialRoute: initialRoute),
+      child: MyApp(initialRoute: initialRoute),
     ),
   );
 }
@@ -35,23 +35,23 @@ void main() async {
 //tahi tera hamesha sidha splash te janda fir splash toh suru hunda
 
 class MyApp extends StatelessWidget {
-
   final String initialRoute;
   const MyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [ChangeNotifierProvider(create: (context) => CartProvider())],
-    
-    child:   GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Omeg-Bazaar',
-      getPages: AppPages.pages,
-      initialBinding: AppBindings(),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => CartProvider())],
 
-      routes: Routes.getRoutes(),
-       initialRoute: initialRoute,
-    ),
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Omeg-Bazaar',
+        getPages: AppPages.pages,
+        initialBinding: AppBindings(),
+
+        routes: Routes.getRoutes(),
+        initialRoute: Routes.splash,
+      ),
     );
   }
 }

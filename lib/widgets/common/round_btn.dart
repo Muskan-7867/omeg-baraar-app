@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../utills/app_colour.dart';
 
-class RoundedButton extends StatelessWidget {
+class RoundButton extends StatelessWidget {
   final VoidCallback onTap;
   final double width;
   final double height;
@@ -12,7 +12,7 @@ class RoundedButton extends StatelessWidget {
   final double borderRadius;
   final String? iconName;
 
-  const RoundedButton({
+  const RoundButton({
     super.key,
     required this.onTap,
     this.width = double.infinity,

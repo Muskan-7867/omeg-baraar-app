@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:omeg_bazaar/screens/intro/widgets/heading_section.dart';
 import 'package:omeg_bazaar/screens/intro/widgets/image_section.dart';
 import 'package:omeg_bazaar/utills/app_pages.dart';
-import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
+import 'package:omeg_bazaar/widgets/common/round_btn.dart';
+
 
 class Intro extends StatefulWidget {
   const Intro({super.key});
@@ -25,7 +26,7 @@ class _IntroState extends State<Intro> {
             Expanded(flex: 3, child: Center(child: HeadingSection())),
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8),
-              child: RoundedButton(
+              child: RoundButton(
                 onTap: () {
                   Get.offAllNamed(Routes.home);
                 },

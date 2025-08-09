@@ -7,8 +7,10 @@ import 'package:omeg_bazaar/services/product/get_product_by_query.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
-import 'package:omeg_bazaar/widgets/common/rounded_button.dart';
+import 'package:omeg_bazaar/widgets/common/round_btn.dart';
+
 import 'package:omeg_bazaar/widgets/common/title.dart';
+
 
 class HomeBody extends StatefulWidget {
   final VoidCallback onSeeAllPressed;
@@ -164,7 +166,7 @@ class _HomeBodyState extends State<HomeBody> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Center(
-                    child: RoundedButton(
+                    child: RoundButton(
                       onTap: widget.onSeeAllPressed,
                       title: 'See All Products',
                       bgColor: AppColour.primaryColor,
