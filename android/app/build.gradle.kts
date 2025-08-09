@@ -31,7 +31,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ashhdeveloper.SavyoMart"
+        applicationId = "com.omtel.omeg_bazaar"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
