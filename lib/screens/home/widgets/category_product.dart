@@ -13,7 +13,7 @@ class CategoryProduct extends StatefulWidget {
 }
 
 class _CategoryProductState extends State<CategoryProduct>
-    with AutomaticKeepAliveClientMixin {
+  with AutomaticKeepAliveClientMixin {
   List categories = [];
   List selectedProducts = [];
   String selectedCategory = '';

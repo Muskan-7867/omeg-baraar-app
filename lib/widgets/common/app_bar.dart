@@ -5,11 +5,10 @@ import 'package:omeg_bazaar/screens/profile/user_profile.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get/get.dart'; // Add this import
+import 'package:get/get.dart'; 
 
 class ThemeController extends GetxController {
   var isDarkMode = false.obs;
-
   void toggleTheme() {
     isDarkMode.value = !isDarkMode.value;
     Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
