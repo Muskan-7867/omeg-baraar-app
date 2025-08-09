@@ -32,7 +32,7 @@ abstract class Routes {
   static const String addressform = '/addressform';
   static const String privacy = '/privacy';
 
-  static Map<String, Widget Function(BuildContext)> getRoutes() => {
+  static Map<String, Widget Function(BuildContext) > getRoutes() => {
     splash: (context) => const SplashScreen(),
     intro: (context) => const Intro(),
     home: (context) => const Home(),

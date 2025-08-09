@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:omeg_bazaar/utills/app_colour.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../utills/app_colour.dart';
 
 class RoundedButton extends StatelessWidget {
   final VoidCallback onTap;

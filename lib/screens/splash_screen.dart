@@ -25,6 +25,21 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  Future<void> handleNaviagate() async {
+    Future.delayed(Duration(seconds: 2), () async {
+      // Check first launch status before running the app
+      final prefs = await SharedPreferences.getInstance();
+      bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
+      final initialRoute = isFirstLaunch ? Routes.splash : Routes.home;
+      if (isFirstLaunch) {
+        Get.offAllNamed(Routes.intro);
+        prefs.setBool("first_launch", true);
+      } else {
+        Get.offAllNamed(Routes.home);
+      }
+    });
+  }
+
   Future<void> _initializeAndNavigate() async {
     try {
       // Initialize cart count
@@ -37,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
         // Mark that the app has been launched before
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('first_launch', false);
-        
+
         // Navigate to intro screen (only first time)
         Get.offAllNamed(Routes.intro, predicate: (route) => false);
       });

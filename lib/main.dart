@@ -32,13 +32,18 @@ void main() async {
   );
 }
 
+//tahi tera hamesha sidha splash te janda fir splash toh suru hunda
+
 class MyApp extends StatelessWidget {
+
   final String initialRoute;
   const MyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MultiProvider(providers: [ChangeNotifierProvider(create: (context) => CartProvider())],
+    
+    child:   GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Omeg-Bazaar',
       getPages: AppPages.pages,
@@ -46,6 +51,10 @@ class MyApp extends StatelessWidget {
 
       routes: Routes.getRoutes(),
        initialRoute: initialRoute,
+    ),
     );
   }
 }
+
+
+//  eh ki kita aa 
