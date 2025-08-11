@@ -21,6 +21,9 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
   @override
   Widget build(BuildContext context) {
     final bool multipleimages = widget.images.length > 1;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Container(
@@ -30,8 +33,7 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
             image: NetworkImage(widget.images[selectedIndex]),
           ),
         ),
-        height: 500,
-        // width: double.infinity,
+        height: isSmallScreen ? screenHeight * 0.5 : screenHeight * 0.6,
         child: Stack(
           children: [
             PageView.builder(
@@ -55,27 +57,23 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
             ),
             if (multipleimages)
               Positioned(
-                bottom: 25,
+                bottom: isSmallScreen ? 15 : 25,
                 left: 0,
                 right: 0,
-
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 14,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isSmallScreen ? 8 : 12,
+                    vertical: isSmallScreen ? 10 : 14,
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      // color: Colors.white,
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    // width: double.infinity,
                     child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-
-                      padding: EdgeInsets.all(6),
+                      padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -91,10 +89,11 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
                                 curve: Curves.easeInOut,
                               );
                             },
-
                             child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              padding: EdgeInsets.all(2),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: isSmallScreen ? 3 : 5,
+                              ),
+                              padding: EdgeInsets.all(isSmallScreen ? 1 : 2),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
@@ -107,8 +106,8 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
                               ),
                               child: Image.network(
                                 widget.images[index],
-                                width: 50,
-                                height: 50,
+                                width: isSmallScreen ? 40 : 50,
+                                height: isSmallScreen ? 40 : 50,
                                 fit: BoxFit.cover,
                               ),
                             ),

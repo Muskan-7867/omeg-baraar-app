@@ -9,7 +9,7 @@ class ProductCard extends StatefulWidget {
   final Map<String, dynamic> product;
   final bool? isSmallScreen;
 
-  const ProductCard({super.key, required this.product,  this.isSmallScreen});
+  const ProductCard({super.key, required this.product, this.isSmallScreen});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -24,15 +24,21 @@ class _ProductCardState extends State<ProductCard> {
   void initState() {
     super.initState();
     checkCartStatus();
-    
-    Provider.of<CartProvider>(context, listen: false).addListener(_onCartChange);
+
+    Provider.of<CartProvider>(
+      context,
+      listen: false,
+    ).addListener(_onCartChange);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     // Remove listener to prevent memory leaks
-    Provider.of<CartProvider>(context, listen: false).removeListener(_onCartChange);
+    Provider.of<CartProvider>(
+      context,
+      listen: false,
+    ).removeListener(_onCartChange);
     super.dispose();
   }
 

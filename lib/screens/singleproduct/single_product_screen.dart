@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omeg_bazaar/provider/cart_provider.dart';
 import 'package:omeg_bazaar/screens/checkout/checkout.dart';
+import 'package:omeg_bazaar/screens/product/widget/related_products_section.dart';
 import 'package:omeg_bazaar/services/cart/cart_helper.dart';
+import 'package:omeg_bazaar/services/product/get_related_products_api.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_detailimage.dart';
 import 'package:omeg_bazaar/screens/product/widget/product_info_screen.dart';
@@ -27,6 +29,10 @@ class _SingleProductState extends State<SingleProduct> {
   Map<String, dynamic>? product;
   bool isInCart = false;
   String? authToken;
+  List<dynamic> relatedProducts = [];
+  bool isLoadingRelated = false;
+  final RelatedProductsService _relatedProductsService =
+      RelatedProductsService();
 
   @override
   void didChangeDependencies() {
@@ -38,6 +44,7 @@ class _SingleProductState extends State<SingleProduct> {
       if (args is Map<String, dynamic>) {
         product = args;
         checkIfInCart();
+        _fetchRelatedProducts();
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Get.back();
@@ -51,6 +58,31 @@ class _SingleProductState extends State<SingleProduct> {
     setState(() {
       authToken = prefs.getString('authToken');
     });
+  }
+
+  Future<void> _fetchRelatedProducts() async {
+    if (product == null || product!['category'] == null) return;
+
+    setState(() => isLoadingRelated = true);
+
+    try {
+      final categoryId = product!['category']['_id'] ?? product!['category'];
+      final products = await _relatedProductsService.fetchRelatedProducts(
+        categoryId.toString(),
+        product!['_id'].toString(),
+      );
+      setState(() {
+        relatedProducts = products;
+      });
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to load related products',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      setState(() => isLoadingRelated = false);
+    }
   }
 
   Future<void> checkIfInCart() async {
@@ -70,7 +102,7 @@ class _SingleProductState extends State<SingleProduct> {
       cart.decrement();
       if (!suppressSnackbar) {
         Get.snackbar(
-          '', // Empty title for cleaner look
+          '',
           'Removed from Cart',
           colorText: Colors.white,
           backgroundColor: Colors.grey[850]!,
@@ -100,10 +132,24 @@ class _SingleProductState extends State<SingleProduct> {
     });
   }
 
+  // Inside _SingleProductState
+  void _handleProductTap(dynamic tappedProduct) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => SingleProduct(
+              cartProducts: widget.cartProducts,
+              quantities: widget.quantities,
+            ),
+        settings: RouteSettings(arguments: tappedProduct),
+      ),
+    );
+  }
+
   void buyNow() {
     if (product == null) return;
 
-    // Check if user is logged in
     if (authToken == null || authToken!.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -112,11 +158,9 @@ class _SingleProductState extends State<SingleProduct> {
       return;
     }
 
-    // Create a temporary list with just this product
     final singleProductList = [product!];
-    final quantities = [1]; // Default quantity is 1
+    final quantities = [1];
 
-    // First add to cart if not already there
     if (!isInCart) {
       toggleCart(suppressSnackbar: true).then((_) {
         if (mounted) {
@@ -149,11 +193,15 @@ class _SingleProductState extends State<SingleProduct> {
             .map((img) => img['url'] as String)
             .toList();
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios),
         ),
         title: const Text('Product Detail'),
@@ -164,10 +212,12 @@ class _SingleProductState extends State<SingleProduct> {
             ProductDetailImage(images: imageUrls),
             ProductInfoScreen(product: product!),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(
+                vertical: isSmallScreen ? 10 : 20,
+                horizontal: 12,
+              ),
               child: Row(
                 children: [
-                  // Add to Cart Button
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
@@ -177,17 +227,21 @@ class _SingleProductState extends State<SingleProduct> {
                           AppColour.secondaryColor,
                         ),
                         padding: WidgetStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.symmetric(vertical: 16),
+                          EdgeInsets.symmetric(
+                            vertical: isSmallScreen ? 16 : 20,
+                          ),
                         ),
                       ),
                       child: Text(
                         isInCart ? 'Remove from Cart' : 'Add to Cart',
-                        style: TextStyle(color: AppColour.primaryColor),
+                        style: TextStyle(
+                          color: AppColour.primaryColor,
+                          fontSize: isSmallScreen ? 14 : 16,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  // Buy Now Button
+                  SizedBox(width: isSmallScreen ? 10 : 16),
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
@@ -197,19 +251,36 @@ class _SingleProductState extends State<SingleProduct> {
                           AppColour.primaryColor,
                         ),
                         padding: WidgetStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.symmetric(vertical: 16),
+                          EdgeInsets.symmetric(
+                            vertical: isSmallScreen ? 16 : 20,
+                          ),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Buy Now',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: isSmallScreen ? 14 : 16,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            // Related Products Section
+            if (isLoadingRelated)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else
+              RelatedProducts(
+                products: relatedProducts,
+                isSmallScreen: isSmallScreen,
+                onProductTap: _handleProductTap,
+              ),
+            SizedBox(height: isSmallScreen ? 40 : 60),
           ],
         ),
       ),

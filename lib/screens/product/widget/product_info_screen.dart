@@ -59,7 +59,6 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
           ),
 
           const SizedBox(height: 4),
-
           /// Price
           Row(
             children: [
@@ -71,7 +70,7 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
                   color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
-              const SizedBox(width: 8), // Spacing between prices
+              const SizedBox(width: 8, height: 8), // Spacing between prices
               Text(
                 'Rs ${widget.product['originalPrice'] ?? ''} /-',
                 style: TextStyle(
@@ -84,19 +83,7 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
           ),
 
           const SizedBox(height: 8),
-
-          /// Product Details Header
-          const Text(
-            'Product Details',
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-
-          /// Description
           ProductDesc(product: widget.product),
-
-          const SizedBox(height: 20),
         ],
       ),
     );
