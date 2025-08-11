@@ -7,8 +7,9 @@ import 'package:provider/provider.dart';
 
 class ProductCard extends StatefulWidget {
   final Map<String, dynamic> product;
+  final bool? isSmallScreen;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({super.key, required this.product,  this.isSmallScreen});
 
   @override
   State<ProductCard> createState() => _ProductCardState();

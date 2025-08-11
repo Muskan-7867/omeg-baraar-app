@@ -7,6 +7,7 @@ class CategoriesOnHomePage extends StatelessWidget {
   final bool isCategoryLoading;
   final String selectedCategoryId; // Changed to ID
   final Function(String) onCategoryTap; // Expects ID
+  final bool isSmallScreen;
 
   const CategoriesOnHomePage({
     super.key,
@@ -14,6 +15,7 @@ class CategoriesOnHomePage extends StatelessWidget {
     required this.isCategoryLoading,
     required this.selectedCategoryId, // Changed to ID
     required this.onCategoryTap,
+    required this.isSmallScreen,
   });
 
   @override

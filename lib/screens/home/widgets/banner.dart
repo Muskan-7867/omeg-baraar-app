@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:omeg_bazaar/utills/app_colour.dart';
 
 class MyBanner extends StatefulWidget {
-  const MyBanner({super.key});
+  final bool isSmallScreen;
+  const MyBanner({super.key, required this.isSmallScreen});
 
   @override
   State<MyBanner> createState() => _MyBannerState();
 }
 
 class _MyBannerState extends State<MyBanner> {
+
   @override
   Widget build(BuildContext context) {
     return Container(

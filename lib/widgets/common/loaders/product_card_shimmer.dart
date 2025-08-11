@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProductCardShimmer extends StatelessWidget {
-  const ProductCardShimmer({super.key});
+    final int crossAxisCount;
+  final double childAspectRatio;
+
+  const ProductCardShimmer({super.key,  this.crossAxisCount = 2,
+    this.childAspectRatio = 0.75,});
 
   @override
   Widget build(BuildContext context) {

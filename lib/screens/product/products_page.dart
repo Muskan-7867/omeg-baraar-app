@@ -77,7 +77,8 @@ class _ProductsPageState extends State<ProductsPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -88,48 +89,38 @@ class _ProductsPageState extends State<ProductsPage> {
               (context) => Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(isSmallScreen ? 8.0 : 16.0),
                     child: Row(
                       children: [
-                        SizedBox(
-                          width: screenWidth * 0.8,
+                        Expanded(
                           child: TextField(
                             controller: _searchController,
-                            onChanged: (value) {},
                             decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 20,
+                              prefixIcon: Icon(Icons.search),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: isSmallScreen ? 10 : 15,
+                                horizontal: isSmallScreen ? 20 : 25,
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(60),
-                                borderSide: const BorderSide(
-                                  color: Colors.grey,
-                                ),
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.grey,
-                                ),
                                 borderRadius: BorderRadius.circular(60),
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               hintText: 'Search',
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 14),
-                          child: IconButton(
-                            onPressed: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                            icon: Icon(
-                              Icons.filter_list,
-                              size: 32,
-                              color: isDarkTheme ? Colors.white : Colors.black,
-                            ),
+                        SizedBox(width: isSmallScreen ? 14 : 20),
+                        IconButton(
+                          icon: Icon(
+                            Icons.filter_list,
+                            size: isSmallScreen ? 32 : 36,
+                            color: isDarkTheme ? Colors.white : Colors.black,
                           ),
+                          onPressed: () => Scaffold.of(context).openDrawer(),
                         ),
                       ],
                     ),

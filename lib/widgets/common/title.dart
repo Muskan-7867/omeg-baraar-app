@@ -4,8 +4,9 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 class TitleWidget extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAll;
+  final bool isSmallScreen;
 
-  const TitleWidget({super.key, required this.title, this.onSeeAll});
+  const TitleWidget({super.key, required this.title, this.onSeeAll,  required this.isSmallScreen });
 
   @override
   Widget build(BuildContext context) {

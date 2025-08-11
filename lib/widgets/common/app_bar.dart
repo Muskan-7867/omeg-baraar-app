@@ -17,8 +17,9 @@ class ThemeController extends GetxController {
 
 class OmAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
+  final bool isSmallScreen;
 
-  const OmAppBar({super.key, required this.title});
+  const OmAppBar({super.key, required this.title, required this.isSmallScreen});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

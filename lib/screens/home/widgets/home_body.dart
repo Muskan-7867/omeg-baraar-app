@@ -8,13 +8,18 @@ import 'package:omeg_bazaar/utills/app_colour.dart';
 import 'package:omeg_bazaar/widgets/common/loaders/product_card_shimmer.dart';
 import 'package:omeg_bazaar/widgets/common/product/product_card.dart';
 import 'package:omeg_bazaar/widgets/common/round_btn.dart';
-
 import 'package:omeg_bazaar/widgets/common/title.dart';
-
 
 class HomeBody extends StatefulWidget {
   final VoidCallback onSeeAllPressed;
-  const HomeBody({super.key, required this.onSeeAllPressed});
+  final double screenWidth;
+
+  const HomeBody({
+    super.key,
+    required this.onSeeAllPressed,
+    required this.screenWidth,
+  });
+
   @override
   State<HomeBody> createState() => _HomeBodyState();
 }
@@ -22,19 +27,17 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   List categories = [];
   List<Map<String, dynamic>> displayedProducts = [];
-  String selectedCategoryId =
-      ''; // Changed from selectedCategory to selectedCategoryId
+  String selectedCategoryId = '';
   bool isCategoryLoading = true;
   bool isProductsLoading = true;
   String searchQuery = '';
   bool isSearching = false;
   final GetFilteredProducts _productsService = GetFilteredProducts();
 
-  // Helper method to get category name from ID
   String getCategoryName(String id) {
     if (id.isEmpty) return '';
     final category = categories.firstWhere(
-      (c) => c['_id'] == id, // Assuming your category objects have '_id' field
+      (c) => c['_id'] == id,
       orElse: () => {'name': ''},
     );
     return category['name'];
@@ -60,7 +63,7 @@ class _HomeBodyState extends State<HomeBody> {
         });
       }
     } catch (e) {
-      // print('Search error: $e');
+      // Handle error
     } finally {
       setState(() {
         isProductsLoading = false;
@@ -121,7 +124,7 @@ class _HomeBodyState extends State<HomeBody> {
       );
       setState(() => displayedProducts = data);
     } catch (e) {
-      // print('Product fetch error: $e');
+      // Handle error
     } finally {
       setState(() => isProductsLoading = false);
     }
@@ -129,28 +132,35 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = widget.screenWidth < 600;
+    final paddingValue = isSmallScreen ? 12.0 : 24.0;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: paddingValue),
       child: CustomScrollView(
         slivers: [
           SliverPersistentHeader(
             pinned: true,
-            delegate: _SearchBarDelegate(onSearch: searchProducts),
+            delegate: _SearchBarDelegate(
+              onSearch: searchProducts,
+              isSmallScreen: isSmallScreen,
+            ),
           ),
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 15),
-                const MyBanner(),
-                const SizedBox(height: 10),
+                SizedBox(height: isSmallScreen ? 15 : 25),
+                MyBanner(isSmallScreen: isSmallScreen),
+                SizedBox(height: isSmallScreen ? 10 : 20),
                 CategoriesOnHomePage(
                   categories: categories,
                   isCategoryLoading: isCategoryLoading,
                   selectedCategoryId: selectedCategoryId,
                   onCategoryTap: fetchProductsByCategory,
+                  isSmallScreen: isSmallScreen,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: isSmallScreen ? 20 : 30),
                 ProductsOnHomePage(
                   displayedProducts: displayedProducts,
                   isLoading: isProductsLoading,
@@ -160,19 +170,19 @@ class _HomeBodyState extends State<HomeBody> {
                           : getCategoryName(selectedCategoryId),
                   onSeeAllPressed: widget.onSeeAllPressed,
                   isSearching: isSearching,
-                  productLimit: 20,
+                  productLimit: isSmallScreen ? 10 : 15,
+                  screenWidth: widget.screenWidth,
                 ),
-
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding: EdgeInsets.only(bottom: isSmallScreen ? 20 : 30),
                   child: Center(
                     child: RoundButton(
                       onTap: widget.onSeeAllPressed,
                       title: 'See All Products',
                       bgColor: AppColour.primaryColor,
                       borderRadius: 60,
-                      width: 180,
-                      height: 45,
+                      width: isSmallScreen ? 180 : 220,
+                      height: isSmallScreen ? 45 : 50,
                     ),
                   ),
                 ),
@@ -187,13 +197,14 @@ class _HomeBodyState extends State<HomeBody> {
 
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   final Function(String) onSearch;
+  final bool isSmallScreen;
 
-  _SearchBarDelegate({required this.onSearch});
+  _SearchBarDelegate({required this.onSearch, required this.isSmallScreen});
 
   @override
-  double get minExtent => 70;
+  double get minExtent => isSmallScreen ? 70 : 80;
   @override
-  double get maxExtent => 80;
+  double get maxExtent => isSmallScreen ? 80 : 90;
 
   @override
   Widget build(
@@ -203,16 +214,16 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   ) {
     return Container(
       color: Colors.white,
-
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(isSmallScreen ? 4 : 8),
       alignment: Alignment.centerLeft,
-      child: CustomSearchBar(onSearch: onSearch),
+      child: CustomSearchBar(onSearch: onSearch, isSmallScreen: isSmallScreen),
     );
   }
 
   @override
   bool shouldRebuild(_SearchBarDelegate oldDelegate) =>
-      oldDelegate.onSearch != onSearch;
+      oldDelegate.onSearch != onSearch ||
+      oldDelegate.isSmallScreen != isSmallScreen;
 }
 
 class ProductsOnHomePage extends StatelessWidget {
@@ -221,7 +232,8 @@ class ProductsOnHomePage extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onSeeAllPressed;
   final bool isSearching;
-  final int productLimit; // Add this line to control how many products to show
+  final int productLimit;
+  final double screenWidth;
 
   const ProductsOnHomePage({
     super.key,
@@ -230,12 +242,25 @@ class ProductsOnHomePage extends StatelessWidget {
     required this.onSeeAllPressed,
     required this.isSearching,
     required this.selectedCategoryName,
-    this.productLimit = 4, // Default to showing 4 products
+    required this.productLimit,
+    required this.screenWidth,
   });
+
+  int _calculateCrossAxisCount() {
+    if (screenWidth > 1200) return 4;
+    if (screenWidth > 800) return 3;
+    if (screenWidth > 600) return 2;
+    return 2; // Default for small screens
+  }
+
+  double _calculateChildAspectRatio() {
+    if (screenWidth > 1200) return 0.85;
+    if (screenWidth > 800) return 0.80;
+    return 0.75; // Default for smaller screens
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Get either all products or limited products based on isSearching
     final productsToShow =
         isSearching
             ? displayedProducts
@@ -252,25 +277,40 @@ class ProductsOnHomePage extends StatelessWidget {
                   ? 'Top Picks for You'
                   : 'Products in "$selectedCategoryName"',
           onSeeAll: onSeeAllPressed,
+          isSmallScreen: screenWidth < 600,
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: screenWidth < 600 ? 10 : 20),
         isLoading
-            ? const ProductCardShimmer()
+            ? ProductCardShimmer(
+              crossAxisCount: _calculateCrossAxisCount(),
+              childAspectRatio: _calculateChildAspectRatio(),
+            )
             : productsToShow.isEmpty
-            ? const Center(child: Text("No products found."))
+            ? Center(
+              child: Padding(
+                padding: EdgeInsets.all(screenWidth < 600 ? 16 : 24),
+                child: Text(
+                  "No products found.",
+                  style: TextStyle(fontSize: screenWidth < 600 ? 16 : 20),
+                ),
+              ),
+            )
             : GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: productsToShow.length,
-              padding: const EdgeInsets.only(top: 20),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.75,
+              padding: EdgeInsets.only(top: screenWidth < 600 ? 20 : 30),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _calculateCrossAxisCount(),
+                crossAxisSpacing: screenWidth < 600 ? 10 : 15,
+                mainAxisSpacing: screenWidth < 600 ? 10 : 15,
+                childAspectRatio: _calculateChildAspectRatio(),
               ),
               itemBuilder: (context, index) {
-                return ProductCard(product: productsToShow[index]);
+                return ProductCard(
+                  product: productsToShow[index],
+                  isSmallScreen: screenWidth < 600,
+                );
               },
             ),
       ],

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final Function(String) onSearch;
-  const CustomSearchBar({super.key, required this.onSearch});
+  final bool isSmallScreen;
+  const CustomSearchBar({super.key, required this.onSearch, required this.isSmallScreen});
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
