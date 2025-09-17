@@ -34,7 +34,7 @@ android {
         applicationId = "com.omtel.omeg_bazaar"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
-        versionCode = 7
+        versionCode = 8
         versionName = flutter.versionName
     }
 
